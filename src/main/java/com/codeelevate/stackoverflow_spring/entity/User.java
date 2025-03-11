@@ -10,71 +10,71 @@ import java.util.List;
 @Table(name ="user")
 public class User {
 
-    @Getter
+   // @Getter
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter
-    @Getter
+   // @Setter
+   // @Getter
     @Column(name="username")
     private String username;
 
-    @Setter
-    @Getter
+   // @Setter
+   // @Getter
     @Column(name="email")
     private String email;
 
-    @Setter
-    @Getter
+  //  @Setter
+  //  @Getter
     @Column(name="password")
     private String password;
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @Column(name="about")
     private String about;
 
     @Column(name="is_moderator")
     private Boolean isModerator;
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @Column(name="reputation")
     private Double reputation;
 
     @Column(name="is_banned")
     private Boolean isBanned;
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @Column(name="img")
     private String img;
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @Column(name="creation_date")
     private Timestamp creationDate;
 
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @OneToMany(mappedBy = "createdByUser")
     private List<Post> posts;
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @OneToMany(mappedBy = "createdByUser")
     private List<Comment> comments;
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @OneToMany(mappedBy = "createdByUser")
     private List<Tag> tags;
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @OneToMany(mappedBy = "votedByUser")
     private List<Vote> votes;
 
@@ -109,4 +109,99 @@ public class User {
         isBanned = banned;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public Double getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(Double reputation) {
+        this.reputation = reputation;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
 }

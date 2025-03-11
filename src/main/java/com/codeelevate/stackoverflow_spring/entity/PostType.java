@@ -9,18 +9,18 @@ import java.util.List;
 @Entity
 @Table(name = "post_type")
 public class PostType {
-    @Getter
+//    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Getter
-    @Setter
+//    @Getter
+//    @Setter
     @OneToMany(mappedBy = "postType")
     private List<Post> posts;
 
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     @Column(name="type_name")
     private String typeName;
 
@@ -32,5 +32,29 @@ public class PostType {
 
     public PostType() {
 
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

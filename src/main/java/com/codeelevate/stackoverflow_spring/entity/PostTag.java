@@ -9,15 +9,19 @@ import lombok.Setter;
 @Table(name = "post_tag")
 public class PostTag {
 
-    @Getter
+//    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+//    @Getter
+//    @Setter
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
+//    @Getter
+//    @Setter
     @ManyToOne
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
