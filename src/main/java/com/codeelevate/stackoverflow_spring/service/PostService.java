@@ -57,8 +57,8 @@ public class PostService {
         return allPosts;
     }
 
-    public List<Post> getAllPostsByTitleAndContent(String titleContent) {
-        return (List<Post>) postRepository.findByTitleAndContent(titleContent);
+    public List<Post> getAllPostsByTitleAndContentAndTag(String titleContent) {
+        return (List<Post>) postRepository.findByTitleContentOrTag(titleContent);
     }
 
     public List<Post> getAllPostsByTag(String tagName) {

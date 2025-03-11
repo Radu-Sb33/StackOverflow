@@ -36,11 +36,11 @@ public class PostController {
 //        return postService.getPostById(id);
 //    }
 
-    @GetMapping("/getAllPostsByTitleAndContent/{input}")
-    @ResponseBody
-    public List<Post> getAllPostsByTitleAndContent(@PathVariable String input) {
-        return postService.getAllPostsByTitleAndContent(input);
-    }
+//    @GetMapping("/getAllPostsByTitleAndContent/{input}")
+//    @ResponseBody
+//    public List<Post> getAllPostsByTitleAndContent(@PathVariable String input) {
+//        return postService.getAllPostsByTitleAndContent(input);
+//    }
 
     @GetMapping("/getAllPostsByUser/{username}")
     @ResponseBody
@@ -95,7 +95,7 @@ public class PostController {
         }
         if (!regFound) {
             System.out.println("No regex found");
-            return postService.getAllPostsByTitleAndContent(query);
+            return postService.getAllPostsByTitleAndContentAndTag(query);
         }
         return null;
 
