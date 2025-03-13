@@ -2,7 +2,7 @@ DROP SCHEMA IF EXISTS stackoverflow_db;
 CREATE SCHEMA stackoverflow_db;
 USE stackoverflow_db;
 CREATE TABLE `user` (
-                        `id` integer PRIMARY KEY,
+                        `id` integer PRIMARY KEY not null AUTO_INCREMENT ,
                         `username` varchar(255),
                         `email` varchar(255),
                         `password` varchar(255),

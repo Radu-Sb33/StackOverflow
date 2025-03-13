@@ -44,8 +44,8 @@ public class PostController {
 
     @GetMapping("/getAllPostsByUser/{username}")
     @ResponseBody
-    public List<Post> getAllPostsByUser(@PathVariable String user) {
-        return postService.getAllPostsByUser(user);
+    public List<Post> getAllPostsByUser(@PathVariable String username) {
+        return postService.getAllPostsByUser(username);
     }
 
     @GetMapping("/search")

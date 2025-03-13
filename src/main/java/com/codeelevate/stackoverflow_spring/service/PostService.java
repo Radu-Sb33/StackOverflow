@@ -43,8 +43,10 @@ public class PostService {
     }
 
     public List<Post> getAllPosts() {
-        return (List<Post>) postRepository.findAll();
-    } //la getAllPosts trb sa le luam de la cea mai noua la cea mai veche
+        List<Post> x = (List<Post>) postRepository.findAll();
+        x.sort(Comparator.comparing(Post::getPostedDate).reversed());
+        return x;
+    }//la getAllPosts trb sa le luam de la cea mai noua la cea mai veche
 
     public List<Post> getAllPostsByUser(String username) {
         List<Post> allPosts = new ArrayList<>();
@@ -54,11 +56,14 @@ public class PostService {
                 allPosts.add(p);
             }
         }
+        allPosts.sort(Comparator.comparing(Post::getPostedDate).reversed());
         return allPosts;
     }
 
-    public List<Post> getAllPostsByTitleAndContentAndTag(String titleContent) {
-        return (List<Post>) postRepository.findByTitleContentOrTag(titleContent);
+    public List<Post> getAllPostsByTitleAndContentAndTag(String post_title_q) {
+        List<Post> x =  (List<Post>) postRepository.findByTitleContentOrTag(post_title_q);
+        x.sort(Comparator.comparing(Post::getPostedDate).reversed());
+        return x;
     }
 
     public List<Post> getAllPostsByTag(String tagName) {
@@ -69,10 +74,11 @@ public class PostService {
             Post p = pt.getPost();
             listPosts.add(p);
         }
+        listPosts.sort(Comparator.comparing(Post::getPostedDate).reversed());
         return listPosts;
     }
 
-    public List<Post> getAllPostsByType(String postTypeName) {
+    public List<Post> getAllPostsByType(String type_name) {
         List<Post> posts = (List<Post>) postRepository.findAll();
         List<Post> questions = new ArrayList<>();
         List<Post> answers = new ArrayList<>();
@@ -85,10 +91,12 @@ public class PostService {
                 }
             }
         }
-        if("question".equals(postTypeName)){
+        if("question".equals(type_name)){
+            questions.sort(Comparator.comparing(Post::getPostedDate).reversed());
             return questions;
         }
-        else if("answer".equals(postTypeName)){
+        else if("answer".equals(type_name)){
+            answers.sort(Comparator.comparing(Post::getPostedDate).reversed());
             return answers;
         }
         return null;
@@ -104,6 +112,7 @@ public class PostService {
                     solvedQuestions.add(p);
                 }
             }
+            solvedQuestions.sort(Comparator.comparing(Post::getPostedDate).reversed());
             return solvedQuestions;
         }
         else if ("no".equals(typeIsAccepted)) {
@@ -113,6 +122,7 @@ public class PostService {
                     unsolvedQuestions.add(p);
                 }
             }
+            unsolvedQuestions.sort(Comparator.comparing(Post::getPostedDate));
             return unsolvedQuestions;
         }
         return null;

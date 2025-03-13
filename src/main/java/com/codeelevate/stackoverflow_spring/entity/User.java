@@ -78,7 +78,9 @@ public class User {
     @OneToMany(mappedBy = "votedByUser")
     private List<Vote> votes;
 
-    public User() {}
+    public User() {
+        this.creationDate = new Timestamp(System.currentTimeMillis());
+    }
 
     public User(Integer id, String username, String email, String password, String about, Boolean isModerator, Double reputation, Boolean isBanned, String img, Timestamp creationDate) {
         this.id = id;
@@ -90,7 +92,7 @@ public class User {
         this.reputation = reputation;
         this.isBanned = isBanned;
         this.img = img;
-        this.creationDate = creationDate;
+        this.creationDate = new Timestamp(System.currentTimeMillis());
     }
 
     public Boolean getModerator() {
@@ -122,6 +124,9 @@ public class User {
     }
 
     public void setUsername(String username) {
+        if(username==null){
+            return;
+        }
         this.username = username;
     }
 
@@ -130,6 +135,9 @@ public class User {
     }
 
     public void setEmail(String email) {
+        if(email==null){
+            return;
+        }
         this.email = email;
     }
 
@@ -138,6 +146,9 @@ public class User {
     }
 
     public void setPassword(String password) {
+        if(password==null){
+            return;
+        }
         this.password = password;
     }
 
@@ -146,6 +157,9 @@ public class User {
     }
 
     public void setAbout(String about) {
+        if(about==null){
+            return;
+        }
         this.about = about;
     }
 
@@ -154,6 +168,9 @@ public class User {
     }
 
     public void setImg(String img) {
+        if(img==null){
+            return;
+        }
         this.img = img;
     }
 
@@ -162,16 +179,19 @@ public class User {
     }
 
     public void setReputation(Double reputation) {
+        if(reputation==null){
+            return;
+        }
         this.reputation = reputation;
     }
 
-    public Timestamp getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Timestamp creationDate) {
-        this.creationDate = creationDate;
-    }
+//    public Timestamp getCreationDate() {
+//        return creationDate;
+//    }
+//
+//    public void setCreationDate(Timestamp creationDate) {
+//        this.creationDate = creationDate;
+//    }
 
     public List<Post> getPosts() {
         return posts;

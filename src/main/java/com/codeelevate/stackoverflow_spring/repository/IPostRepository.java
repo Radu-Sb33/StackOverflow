@@ -12,18 +12,18 @@ import java.util.List;
 
 @Repository
 public interface IPostRepository extends CrudRepository<Post, Integer> {
-    List<PostTag> findByPost(Post post);
-    List<Post> findByTitleAndContent(String title);//trb implementat
-    List<Post> findByTagContaining(Tag tag);
-    List<Post> findByUser(String username); // regex (user:1234 => 1234)
-    List<Post> findByAnswers(String answers); //regex pt a determina nr rasp(ex. "answers:0" => 0)
-    List<Post> findByScore(String score); //regex pt a determina nr score(ex. "score:0" => 0)
-    List<Post> findByType(PostType type);
-    List<Post> findByAcceptedQuestions(Post post);//avem valoare in accepted_answer_id=> status=closed
+    //List<PostTag> findByPost(Post post);
+   // List<Post> findByTitleAndContent(String title);//trb implementat
+   // List<Post> findByTagContaining(Tag tag);
+   // List<Post> findByUser(String username); // regex (user:1234 => 1234)
+   // List<Post> findByAnswers(String answers); //regex pt a determina nr rasp(ex. "answers:0" => 0)
+   // List<Post> findByScore(String score); //regex pt a determina nr score(ex. "score:0" => 0)
+   // List<Post> findByType(PostType type);
+   // List<Post> findByAcceptedQuestions(Post post);//avem valoare in accepted_answer_id=> status=closed
     @Query("SELECT p FROM Post p " +
             "JOIN p.postTags pt " +
-            "WHERE LOWER(p.postTitleQ) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "OR LOWER(p.postContent) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "OR LOWER(pt.tag.tagName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    List<Post> findByTitleContentOrTag(String keyword);
+            "WHERE LOWER(p.postTitleQ) LIKE LOWER(CONCAT('%', :post_title_q, '%')) " +
+            "OR LOWER(p.postContent) LIKE LOWER(CONCAT('%', :post_title_q, '%')) " +
+            "OR LOWER(pt.tag.tagName) LIKE LOWER(CONCAT('%', :post_title_q, '%'))")
+    List<Post> findByTitleContentOrTag(String post_title_q);
 }

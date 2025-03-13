@@ -41,10 +41,14 @@ public class UserController {
 
     @DeleteMapping("/deleteById/{id}")
     @ResponseBody
-    public void deleteUserById(@RequestParam @PathVariable Integer id) {
+    public void deleteUserById( @PathVariable Integer id) {
         userService.deleteUser(id);
     }
 
-
+    @GetMapping("/get/byUsername/{username}")
+    @ResponseBody
+    public List<User> getUserByUsername(@PathVariable String username) {
+        return userService.findAllUsersByUsername(username);
+    }
 
 }

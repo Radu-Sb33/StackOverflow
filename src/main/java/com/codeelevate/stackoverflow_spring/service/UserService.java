@@ -35,11 +35,10 @@ public class UserService {
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
             user.setAbout(userDetails.getAbout());
-            user.setModerator(userDetails.getModerator());
+            //user.setModerator(userDetails.getModerator()); //se face din admin
             user.setReputation(userDetails.getReputation());
-            user.setBanned(userDetails.getBanned());
+            //user.setBanned(userDetails.getBanned()); //se face din admin
             user.setImg(userDetails.getImg());
-            user.setCreationDate(userDetails.getCreationDate());
             return userRepository.save(user);
         }).orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -48,7 +47,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void findAllUsersByUsername(String username) {
-        userRepository.findByUsername(username);
+    public List<User> findAllUsersByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
