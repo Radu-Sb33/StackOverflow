@@ -19,20 +19,24 @@ public class PostService {
 
     public Post createPost(Post post) {
         if(Objects.equals(post.getPostType().getTypeName(), "question") && post.getParentQuestion() == null){
-        post.setPostedDate((Timestamp) new Date());
         post.setStatusQ("Received");
-        post.setCreatedByUser(post.getCreatedByUser());
+        //post.setCreatedByUser(post.getCreatedByUser());
         post.setPostTitleQ(post.getPostTitleQ());
         post.setPostContent(post.getPostContent());
         post.setImg(post.getImg());
         post.setParentQuestion(null);
         post.setAcceptedAnswer(null);
+//        if(post.getPostTags()==null){
+//            post.setPostTags(new ArrayList<>());
+//            PostTag postTag = new PostTag();
+//            postTag.setPost(post);
+//
+//        }
         }
         else if(Objects.equals(post.getPostType().getTypeName(), "answer") && post.getParentQuestion() != null){
             post.setStatusQ(null);
             post.setPostTitleQ(null);
-            post.setPostedDate((Timestamp) new Date());
-            post.setCreatedByUser(post.getCreatedByUser());
+            //post.setCreatedByUser(post.getCreatedByUser());
             post.setPostContent(post.getPostContent());
             post.setParentQuestion(post.getParentQuestion());
             post.setImg(post.getImg());

@@ -84,7 +84,7 @@ public class Post {
     @OneToMany(mappedBy ="post")
     private List<PostTag> postTags;
 
-    public Post(Integer id, List<Vote> votes, User createdByUser, Post parentQuestion, List<Post> answers, PostType postType, String postTitleQ, String postContent, Timestamp postedDate, String img, String statusQ, Post acceptedAnswer, List<Comment> comments, List<PostTag> postTags) {
+    public Post(Integer id, List<Vote> votes, User createdByUser, Post parentQuestion, List<Post> answers, PostType postType, String postTitleQ, String postContent, String img, String statusQ, Post acceptedAnswer, List<Comment> comments, List<PostTag> postTags) {
         this.id = id;
         this.votes = votes;
         this.createdByUser = createdByUser;
@@ -93,7 +93,7 @@ public class Post {
         this.postType = postType;
         this.postTitleQ = postTitleQ;
         this.postContent = postContent;
-        this.postedDate = postedDate;
+        this.postedDate = new Timestamp(System.currentTimeMillis());
         this.img = img;
         this.statusQ = statusQ;
         this.acceptedAnswer = acceptedAnswer;

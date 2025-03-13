@@ -18,7 +18,7 @@ public class Tag {
     private String tagName;
 
 
-    @Column(name="tag_decsription")
+    @Column(name="tag_description")
     private String tagDescription;
 
 

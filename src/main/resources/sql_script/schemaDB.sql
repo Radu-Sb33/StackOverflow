@@ -36,7 +36,7 @@ CREATE TABLE `comment` (
 );
 
 CREATE TABLE `tag` (
-                       `id` integer PRIMARY KEY,
+                       `id` integer PRIMARY KEY not null AUTO_INCREMENT,
                        `tag_name` varchar(255),
                        `tag_description` text,
                        `created_by_user_id` integer NOT NULL
