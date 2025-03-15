@@ -1,14 +1,25 @@
 package com.codeelevate.stackoverflow_spring.entity;
 
+import com.codeelevate.stackoverflow_spring.service.UserService;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "post")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")//,
+        //scope = Post.class)
 public class Post {
 
     //@Getter
@@ -70,9 +81,9 @@ public class Post {
 
 //    @Getter
 //    @Setter
-    @OneToOne
-    @JoinColumn(name = "accepted_answer_id", unique = true)
-    private Post acceptedAnswer;
+    //@OneToOne
+    @Column(name = "accepted_answer_id", unique = true)
+    private Integer acceptedAnswer;
 
 //    @Getter
 //    @Setter
@@ -84,26 +95,16 @@ public class Post {
     @OneToMany(mappedBy ="post")
     private List<PostTag> postTags;
 
-    public Post(Integer id, List<Vote> votes, User createdByUser, Post parentQuestion, List<Post> answers, PostType postType, String postTitleQ, String postContent, String img, String statusQ, Post acceptedAnswer, List<Comment> comments, List<PostTag> postTags) {
-        this.id = id;
-        this.votes = votes;
-        this.createdByUser = createdByUser;
-        this.parentQuestion = parentQuestion;
-        this.answers = answers;
-        this.postType = postType;
-        this.postTitleQ = postTitleQ;
-        this.postContent = postContent;
-        this.postedDate = new Timestamp(System.currentTimeMillis());
-        this.img = img;
-        this.statusQ = statusQ;
-        this.acceptedAnswer = acceptedAnswer;
-        this.comments = comments;
-        this.postTags = postTags;
-    }
 
     public Post() {
+        this.votes = new ArrayList<>();
+        this.answers = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.postTags = new ArrayList<>();
+        this.postedDate =new Timestamp(System.currentTimeMillis());
 
     }
+
 
     public Integer getId() {
         return id;
@@ -193,11 +194,11 @@ public class Post {
         this.statusQ = statusQ;
     }
 
-    public Post getAcceptedAnswer() {
+    public Integer getAcceptedAnswer() {
         return acceptedAnswer;
     }
 
-    public void setAcceptedAnswer(Post acceptedAnswer) {
+    public void setAcceptedAnswer(Integer acceptedAnswer) {
         this.acceptedAnswer = acceptedAnswer;
     }
 
@@ -215,5 +216,26 @@ public class Post {
 
     public void setPostTags(List<PostTag> postTags) {
         this.postTags = postTags;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", votes=" + votes +
+                ", createdByUser=" + createdByUser +
+                ", parentQuestion=" + parentQuestion +
+                ", answers=" + answers +
+                ", postType=" + postType +
+                ", postTitleQ='" + postTitleQ + '\'' +
+                ", postContent='" + postContent + '\'' +
+                ", postedDate=" + postedDate +
+                ", img='" + img + '\'' +
+                ", statusQ='" + statusQ + '\'' +
+                ", acceptedAnswer=" + acceptedAnswer +
+                ", comments=" + comments +
+                ", postTags=" + postTags +
+                '}';
     }
 }

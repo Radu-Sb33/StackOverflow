@@ -4,45 +4,74 @@ import com.codeelevate.stackoverflow_spring.entity.*;
 import com.codeelevate.stackoverflow_spring.repository.IPostRepository;
 import com.codeelevate.stackoverflow_spring.repository.IPostTypeRepository;
 import com.codeelevate.stackoverflow_spring.repository.ITagRepository;
+import com.codeelevate.stackoverflow_spring.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class PostService {
     @Autowired
     IPostRepository postRepository;
+    @Autowired
     ITagRepository tagRepository;
+    @Autowired
     IPostTypeRepository postTypeRepository;
+    @Autowired
+    IUserRepository userRepository;
 
     public Post createPost(Post post) {
-        if(Objects.equals(post.getPostType().getTypeName(), "question") && post.getParentQuestion() == null){
-        post.setStatusQ("Received");
-        //post.setCreatedByUser(post.getCreatedByUser());
-        post.setPostTitleQ(post.getPostTitleQ());
-        post.setPostContent(post.getPostContent());
-        post.setImg(post.getImg());
-        post.setParentQuestion(null);
-        post.setAcceptedAnswer(null);
-//        if(post.getPostTags()==null){
-//            post.setPostTags(new ArrayList<>());
-//            PostTag postTag = new PostTag();
-//            postTag.setPost(post);
-//
-//        }
+
+        Integer userId=post.getCreatedByUser().getId();
+        User user=userRepository.findById(userId).orElseThrow(() ->
+                new RuntimeException("User not found with id: " + userId));
+        post.setCreatedByUser(user);
+
+        String name = post.getPostType().getTypeName();
+        PostType postType=postTypeRepository.findByPostTypeName(name);
+        post.setPostType(postType);
+
+        Integer postQuestionId=post.getParentQuestion().getId();
+        Post parentQuestion=postRepository.findById(postQuestionId).orElseThrow(() -> new RuntimeException("Question not found with id: " + postQuestionId));
+        post.setParentQuestion(parentQuestion);
+
+        if("question".equals(postType.getTypeName()) && post.getParentQuestion()==null){
+            post.setStatusQ("Received");
+            if (user.getPosts() == null) {
+                user.setPosts(new ArrayList<>());
+            }
+            user.getPosts().add(post);
+            if (postType.getPosts() == null) {
+                postType.setPosts(new ArrayList<>());
+            }
+            postType.getPosts().add(post);
+
         }
-        else if(Objects.equals(post.getPostType().getTypeName(), "answer") && post.getParentQuestion() != null){
+        else if("answer".equals(postType.getTypeName()) && post.getParentQuestion()!=null){
             post.setStatusQ(null);
-            post.setPostTitleQ(null);
-            //post.setCreatedByUser(post.getCreatedByUser());
-            post.setPostContent(post.getPostContent());
-            post.setParentQuestion(post.getParentQuestion());
-            post.setImg(post.getImg());
-            post.setAcceptedAnswer(null);
-        }
+            //post.setParentQuestion(post.getParentQuestion());
+
+
+            if (user.getPosts() == null) {
+               user.setPosts(new ArrayList<>());
+           }
+            user.getPosts().add(post);
+            if (postType.getPosts() == null) {
+                postType.setPosts(new ArrayList<>());
+            }
+            postType.getPosts().add(post);
+
+            if (parentQuestion.getAnswers() == null) {
+                parentQuestion.setAnswers(new ArrayList<>());
+            }
+            parentQuestion.getAnswers().add(post);
+
+       }
         else {throw new IllegalArgumentException("Invalid post type"); }
+        //postTypeRepository.save(post.getPostType());//de rezolvat
         return postRepository.save(post);
     }
 

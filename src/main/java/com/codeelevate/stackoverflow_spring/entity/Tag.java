@@ -68,14 +68,23 @@ public class Tag {
     }
 
     public void setTagName(String tagName) {
+        if(tagName==null){
+            return;
+        }
         this.tagName = tagName;
     }
 
     public void setTagDescription(String tagDescription) {
+        if(tagDescription==null){
+            return;
+        }
         this.tagDescription = tagDescription;
     }
 
     public void setCreatedByUser(User createdByUser) {
+        if(createdByUser==null){
+            return;
+        }
         this.createdByUser = createdByUser;
     }
 

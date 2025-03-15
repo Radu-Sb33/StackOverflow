@@ -15,7 +15,7 @@ CREATE TABLE `user` (
 );
 
 CREATE TABLE `post` (
-                        `id` integer PRIMARY KEY,
+                        `id` integer PRIMARY KEY not null AUTO_INCREMENT ,
                         `created_by_user_id` integer NOT NULL,
                         `parent_question_id` integer,
                         `post_type_id` integer NOT NULL,
@@ -24,11 +24,11 @@ CREATE TABLE `post` (
                         `posted_date` timestamp,
                         `img` varchar(255),
                         `status_q` varchar(255),
-                        `accepted_answer_id` integer UNIQUE
+                        `accepted_answer_id` integer
 );
 
 CREATE TABLE `comment` (
-                           `id` integer PRIMARY KEY,
+                           `id` integer PRIMARY KEY not null AUTO_INCREMENT ,
                            `post_id` integer NOT NULL,
                            `created_by_user_id` integer NOT NULL,
                            `comment_content` text,
@@ -43,25 +43,25 @@ CREATE TABLE `tag` (
 );
 
 CREATE TABLE `post_tag` (
-                            `id` integer PRIMARY KEY,
+                            `id` integer PRIMARY KEY not null AUTO_INCREMENT ,
                             `post_id` integer NOT NULL,
                             `tag_id` integer NOT NULL
 );
 
 CREATE TABLE `post_type` (
-                             `id` integer PRIMARY KEY,
+                             `id` integer PRIMARY KEY not null,
                              `type_name` varchar(255)
 );
 
 CREATE TABLE `vote` (
-                        `id` integer PRIMARY KEY,
+                        `id` integer PRIMARY KEY not null AUTO_INCREMENT ,
                         `post_id` integer NOT NULL,
                         `vote_type_id` integer NOT NULL,
                         `voted_by_user_id` integer NOT NULL
 );
 
 CREATE TABLE `vote_type` (
-                             `id` integer PRIMARY KEY,
+                             `id` integer PRIMARY KEY not null AUTO_INCREMENT ,
                              `vote_type` varchar(255)
 );
 
@@ -71,7 +71,7 @@ ALTER TABLE `post` ADD FOREIGN KEY (`parent_question_id`) REFERENCES `post` (`id
 
 ALTER TABLE `post` ADD FOREIGN KEY (`post_type_id`) REFERENCES `post_type` (`id`);
 
-ALTER TABLE `post` ADD FOREIGN KEY (`id`) REFERENCES `post` (`accepted_answer_id`);
+#ALTER TABLE `post` ADD FOREIGN KEY (`id`) REFERENCES `post` (`accepted_answer_id`);
 
 ALTER TABLE `comment` ADD FOREIGN KEY (`created_by_user_id`) REFERENCES `user` (`id`);
 
@@ -89,4 +89,10 @@ ALTER TABLE `vote` ADD FOREIGN KEY (`voted_by_user_id`) REFERENCES `user` (`id`)
 
 ALTER TABLE `tag` ADD FOREIGN KEY (`created_by_user_id`) REFERENCES `user` (`id`);
 
-ALTER TABLE `comment` ADD FOREIGN KEY (`created_by_user_id`) REFERENCES `comment` (`post_id`);
+insert into post_type values
+    (1, 'question');
+
+insert into post_type values
+    (2, 'answer');
+
+

@@ -1,13 +1,21 @@
 package com.codeelevate.stackoverflow_spring.entity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name ="user")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class User {
 
    // @Getter
@@ -60,8 +68,8 @@ public class User {
 
 //    @Setter
 //    @Getter
-    @OneToMany(mappedBy = "createdByUser")
-    private List<Post> posts;
+    @OneToMany(mappedBy = "createdByUser", cascade = CascadeType.ALL)
+    private List<Post> posts=new ArrayList<>();
 
 //    @Setter
 //    @Getter
@@ -79,19 +87,13 @@ public class User {
     private List<Vote> votes;
 
     public User() {
-        this.creationDate = new Timestamp(System.currentTimeMillis());
-    }
-
-    public User(Integer id, String username, String email, String password, String about, Boolean isModerator, Double reputation, Boolean isBanned, String img, Timestamp creationDate) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.about = about;
-        this.isModerator = isModerator;
-        this.reputation = reputation;
-        this.isBanned = isBanned;
-        this.img = img;
+        this.posts = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.tags = new ArrayList<>();
+        this.votes = new ArrayList<>();
+        this.isModerator = false;
+        this.isBanned = false;
+        this.reputation = 0.0;
         this.creationDate = new Timestamp(System.currentTimeMillis());
     }
 
@@ -124,9 +126,6 @@ public class User {
     }
 
     public void setUsername(String username) {
-        if(username==null){
-            return;
-        }
         this.username = username;
     }
 
@@ -135,9 +134,6 @@ public class User {
     }
 
     public void setEmail(String email) {
-        if(email==null){
-            return;
-        }
         this.email = email;
     }
 
@@ -146,9 +142,6 @@ public class User {
     }
 
     public void setPassword(String password) {
-        if(password==null){
-            return;
-        }
         this.password = password;
     }
 
@@ -157,9 +150,6 @@ public class User {
     }
 
     public void setAbout(String about) {
-        if(about==null){
-            return;
-        }
         this.about = about;
     }
 
@@ -179,9 +169,6 @@ public class User {
     }
 
     public void setReputation(Double reputation) {
-        if(reputation==null){
-            return;
-        }
         this.reputation = reputation;
     }
 
@@ -223,5 +210,31 @@ public class User {
 
     public void setVotes(List<Vote> votes) {
         this.votes = votes;
+    }
+
+    public List<Integer> getPostIDs(List<Post> posts) {
+        List<Integer> postIDs = new ArrayList<>();
+        for (Post post : posts) {
+            postIDs.add(post.getId());
+        }
+        return postIDs;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "password='" + password + '\'' +
+                ", about='" + about + '\'' +
+                ", id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", reputation=" + reputation +
+                ", img='" + img + '\'' +
+                ", creationDate=" + creationDate +
+                ", posts=" + getPostIDs(posts) +
+                ", comments=" + comments +
+                ", tags=" + tags +
+                ", votes=" + votes +
+                '}';
     }
 }
