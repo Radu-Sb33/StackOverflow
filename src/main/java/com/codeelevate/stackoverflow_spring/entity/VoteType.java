@@ -2,6 +2,7 @@ package com.codeelevate.stackoverflow_spring.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,15 +18,10 @@ public class VoteType {
     @OneToMany(mappedBy = "voteType")
     private List<Vote> votes;
 
-    public VoteType(Integer id, String voteType, List<Vote> votes) {
-        this.id = id;
-        this.voteType = voteType;
-        this.votes = votes;
-    }
-
     public VoteType() {
-
+        this.votes = new ArrayList<>();
     }
+
 
     public Integer getId() {
         return id;

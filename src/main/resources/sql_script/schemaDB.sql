@@ -95,4 +95,9 @@ insert into post_type values
 insert into post_type values
     (2, 'answer');
 
+insert into vote_type values
+                          (1, 'upvote');
+insert into vote_type values
+                          (2, 'downvote');
+
 

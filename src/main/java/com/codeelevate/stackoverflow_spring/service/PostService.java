@@ -34,10 +34,6 @@ public class PostService {
         PostType postType=postTypeRepository.findByPostTypeName(name);
         post.setPostType(postType);
 
-        Integer postQuestionId=post.getParentQuestion().getId();
-        Post parentQuestion=postRepository.findById(postQuestionId).orElseThrow(() -> new RuntimeException("Question not found with id: " + postQuestionId));
-        post.setParentQuestion(parentQuestion);
-
         if("question".equals(postType.getTypeName()) && post.getParentQuestion()==null){
             post.setStatusQ("Received");
             if (user.getPosts() == null) {
@@ -52,7 +48,10 @@ public class PostService {
         }
         else if("answer".equals(postType.getTypeName()) && post.getParentQuestion()!=null){
             post.setStatusQ(null);
-            //post.setParentQuestion(post.getParentQuestion());
+
+            Integer postQuestionId=post.getParentQuestion().getId();
+            Post parentQuestion=postRepository.findById(postQuestionId).orElseThrow(() -> new RuntimeException("Question not found with id: " + postQuestionId));
+            post.setParentQuestion(parentQuestion);
 
 
             if (user.getPosts() == null) {

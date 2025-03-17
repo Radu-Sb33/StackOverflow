@@ -1,12 +1,17 @@
 package com.codeelevate.stackoverflow_spring.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name = "post_tag")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class PostTag {
 
 //    @Getter
@@ -27,12 +32,6 @@ public class PostTag {
     private Tag tag;
 
     public PostTag() {}
-
-    public PostTag(Integer id, Post post, Tag tag) {
-        this.id = id;
-        this.post = post;
-        this.tag = tag;
-    }
 
     public Integer getId() {
         return id;

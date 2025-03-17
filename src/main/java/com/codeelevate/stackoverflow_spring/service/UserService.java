@@ -1,7 +1,12 @@
 package com.codeelevate.stackoverflow_spring.service;
 
+import com.codeelevate.stackoverflow_spring.entity.Post;
 import com.codeelevate.stackoverflow_spring.entity.User;
+import com.codeelevate.stackoverflow_spring.entity.Vote;
+import com.codeelevate.stackoverflow_spring.entity.VoteType;
 import com.codeelevate.stackoverflow_spring.repository.IUserRepository;
+import com.codeelevate.stackoverflow_spring.repository.IVoteRepository;
+import com.codeelevate.stackoverflow_spring.repository.IVoteTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +17,10 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     IUserRepository userRepository;
+
+    @Autowired
+    IVoteTypeRepository voteTypeRepository;
+
 
     public User createUser(User user) {
         return userRepository.save(user);
@@ -50,4 +59,39 @@ public class UserService {
     public List<User> findAllUsersByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public void calculateReputation(User user) {
+        user.setReputation(0.0);
+        for (Post post : user.getPosts()) {
+            if(post.getPostType().getTypeName().equals("question")){
+                for(Vote vote : post.getVotes()){
+                    if(vote.getVoteType().getId()==1){
+                        user.setReputation(user.getReputation() + 2.5);
+                    }
+                    else{user.setReputation(user.getReputation() - 1.5);}
+                }
+            }
+            else if(post.getPostType().getTypeName().equals("answer")){
+                for(Vote vote : post.getVotes()){
+                    if(vote.getVoteType().getId()==1){
+                        user.setReputation(user.getReputation() + 5);
+                    }
+                    else{user.setReputation(user.getReputation() - 2.5);}
+                }
+            }
+        }
+        //userRepository.save(user);
+        List<VoteType> voteTypes = (List<VoteType>) voteTypeRepository.findAll();
+        for(VoteType voteType : voteTypes){
+            if(voteType.getId()==2){
+                for(Vote vote:voteType.getVotes()){
+                    if(vote.getVotedByUser() != null && vote.getVotedByUser().getId().equals(user.getId())){
+                        user.setReputation(user.getReputation() - 1.5);
+                    }
+                }
+            }
+        }
+        userRepository.save(user);
+    }
+
 }

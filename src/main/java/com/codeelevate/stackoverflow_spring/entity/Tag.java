@@ -3,6 +3,7 @@ package com.codeelevate.stackoverflow_spring.entity;
 import jakarta.persistence.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,16 +32,8 @@ public class Tag {
     private List<PostTag> postsTags;
 
 
-    public Tag(Integer id, String tagName, String tagDescription, User createdByUser, List<PostTag> postsTags) {
-        this.id = id;
-        this.tagName = tagName;
-        this.tagDescription = tagDescription;
-        this.createdByUser = createdByUser;
-        this.postsTags = postsTags;
-    }
-
     public Tag() {
-
+        this.postsTags = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -88,7 +81,7 @@ public class Tag {
         this.createdByUser = createdByUser;
     }
 
-    public void setPostsTags(List<PostTag> postsTags) {
+    public void setPostTags(List<PostTag> postsTags) {
         this.postsTags = postsTags;
     }
 }
