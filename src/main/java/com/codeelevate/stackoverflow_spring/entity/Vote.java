@@ -1,5 +1,6 @@
 package com.codeelevate.stackoverflow_spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -8,7 +9,8 @@ import jakarta.persistence.*;
 @Table(name = "vote")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+        property = "id",
+        scope = Vote.class)
 public class Vote {
 
     @Id
@@ -23,10 +25,11 @@ public class Vote {
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
+    //@JsonBackReference
     private Post post;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "voted_by_user_id", nullable = false)
     private User votedByUser;
 

@@ -24,6 +24,12 @@ public class PostController {
         return postService.getAllPosts();
     }
 
+    @DeleteMapping("/deletePost/{id}")
+    @ResponseBody
+    public void deletePost( @PathVariable Integer id) {
+        postService.deletePost(id);
+    }
+
     @PostMapping("/createPost")
     @ResponseBody
     public Post createPost(@RequestBody Post post) {
@@ -46,6 +52,12 @@ public class PostController {
     @ResponseBody
     public List<Post> getAllPostsByUser(@PathVariable String username) {
         return postService.getAllPostsByUser(username);
+    }
+
+    @PutMapping("/updatePost/{id}")
+    @ResponseBody
+    public Post updatePost(@PathVariable Integer id, @RequestBody Post postDetails) {
+        return postService.updatePost(id, postDetails);
     }
 
     @GetMapping("/search")

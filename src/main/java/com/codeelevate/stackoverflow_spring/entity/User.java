@@ -15,7 +15,8 @@ import java.util.List;
 @Table(name ="user")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+        property = "id",
+        scope = User.class)
 public class User {
 
    // @Getter
@@ -106,10 +107,12 @@ public class User {
     }
 
     public void setModerator(Boolean moderator) {
+        if(moderator==null){return;}
         isModerator = moderator;
     }
 
     public void setBanned(Boolean banned) {
+        if(banned==null){return;}
         isBanned = banned;
     }
 
@@ -126,6 +129,8 @@ public class User {
     }
 
     public void setUsername(String username) {
+
+        if(username==null){return;}
         this.username = username;
     }
 
@@ -134,6 +139,7 @@ public class User {
     }
 
     public void setEmail(String email) {
+        if(email==null){return;}
         this.email = email;
     }
 
@@ -142,6 +148,7 @@ public class User {
     }
 
     public void setPassword(String password) {
+        if(password==null){return;}
         this.password = password;
     }
 
@@ -150,6 +157,7 @@ public class User {
     }
 
     public void setAbout(String about) {
+        if(about==null){return;}
         this.about = about;
     }
 

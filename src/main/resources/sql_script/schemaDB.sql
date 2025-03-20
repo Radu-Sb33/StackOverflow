@@ -100,4 +100,36 @@ insert into vote_type values
 insert into vote_type values
                           (2, 'downvote');
 
+INSERT INTO `user` (`id`, `username`, `email`, `password`, `about`, `is_moderator`, `reputation`, `is_banned`, `img`, `creation_date`)
+VALUES (-1, 'Anonymous', 'anonymous@example.com', '', '', FALSE, 0, FALSE, '', NOW());
+
+DELIMITER $$
+
+CREATE TRIGGER before_user_delete
+    BEFORE DELETE ON `user`
+    FOR EACH ROW
+BEGIN
+    -- Setăm toate tag-urile create de utilizator la NULL
+    UPDATE `tag`
+    SET `created_by_user_id` = -1
+    WHERE `created_by_user_id` = OLD.id;
+
+    -- Setăm toate postările create de utilizator la NULL
+    UPDATE `post`
+    SET `created_by_user_id` = -1
+    WHERE `created_by_user_id` = OLD.id;
+
+    -- Setăm toate comentariile create de utilizator la NULL
+    UPDATE `comment`
+    SET `created_by_user_id` = -1
+    WHERE `created_by_user_id` = OLD.id;
+
+    -- Setăm voturile date de utilizator la NULL
+    UPDATE `vote`
+    SET `voted_by_user_id` = -1
+    WHERE `voted_by_user_id` = OLD.id;
+END $$
+
+DELIMITER ;
+
 

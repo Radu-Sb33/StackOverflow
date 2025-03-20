@@ -1,12 +1,10 @@
 package com.codeelevate.stackoverflow_spring.service;
 
-import com.codeelevate.stackoverflow_spring.entity.Post;
-import com.codeelevate.stackoverflow_spring.entity.User;
-import com.codeelevate.stackoverflow_spring.entity.Vote;
-import com.codeelevate.stackoverflow_spring.entity.VoteType;
-import com.codeelevate.stackoverflow_spring.repository.IUserRepository;
+import com.codeelevate.stackoverflow_spring.entity.*;
+import com.codeelevate.stackoverflow_spring.repository.*;
 import com.codeelevate.stackoverflow_spring.repository.IVoteRepository;
 import com.codeelevate.stackoverflow_spring.repository.IVoteTypeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +18,18 @@ public class UserService {
 
     @Autowired
     IVoteTypeRepository voteTypeRepository;
+
+    @Autowired
+    IPostRepository postRepository;
+
+    @Autowired
+    IVoteRepository voteRepository;
+
+    @Autowired
+    ICommentRepository commRepository;
+
+    @Autowired
+    ITagRepository tagRepository;
 
 
     public User createUser(User user) {
@@ -38,6 +48,15 @@ public class UserService {
             return Optional.empty();
     }
 
+    public User getById(Integer id) {
+        for (User user : getAllUsers()) {
+            if (user.getId().equals(id)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public User updateUser(Integer id, User userDetails) {
         return userRepository.findById(id).map(user -> {
             user.setUsername(userDetails.getUsername());
@@ -45,15 +64,34 @@ public class UserService {
             user.setPassword(userDetails.getPassword());
             user.setAbout(userDetails.getAbout());
             //user.setModerator(userDetails.getModerator()); //se face din admin
-            user.setReputation(userDetails.getReputation());
+//            user.setReputation(userDetails.getReputation());
             //user.setBanned(userDetails.getBanned()); //se face din admin
             user.setImg(userDetails.getImg());
             return userRepository.save(user);
         }).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    //@Transactional
     public void deleteUser(Integer id) {
-        userRepository.deleteById(id);
+       User deleted = this.getById(-1);
+//       deleted.setId(-1);
+        for(Tag tag: this.getById(id).getTags()){
+            tag.setCreatedByUser(deleted);
+            tagRepository.save(tag);
+        }
+        for(Post p: this.getById(id).getPosts()){
+            p.setCreatedByUser(deleted);
+            postRepository.save(p);
+        }
+        for(Comment comment: this.getById(id).getComments()){
+            comment.setCreatedByUser(deleted);
+            commRepository.save(comment);
+        }
+        for(Vote v: this.getById(id).getVotes()){
+            v.setVotedByUser(deleted);
+            voteRepository.save(v);
+        }
+       userRepository.deleteById(id);
     }
 
     public List<User> findAllUsersByUsername(String username) {
@@ -76,22 +114,21 @@ public class UserService {
                     if(vote.getVoteType().getId()==1){
                         user.setReputation(user.getReputation() + 5);
                     }
-                    else{user.setReputation(user.getReputation() - 2.5);}
+                    else{
+                        vote.getVotedByUser().setReputation(vote.getVotedByUser().getReputation() - 1.5);
+                        user.setReputation(user.getReputation() - 2.5);}
                 }
             }
         }
-        //userRepository.save(user);
-        List<VoteType> voteTypes = (List<VoteType>) voteTypeRepository.findAll();
-        for(VoteType voteType : voteTypes){
-            if(voteType.getId()==2){
-                for(Vote vote:voteType.getVotes()){
-                    if(vote.getVotedByUser() != null && vote.getVotedByUser().getId().equals(user.getId())){
-                        user.setReputation(user.getReputation() - 1.5);
-                    }
-                }
-            }
-        }
-        userRepository.save(user);
+
+//        List<Vote> voturi = (List<Vote>) voteRepository.findAll();
+//        for (Vote vote : voturi) {
+//            if(vote.getVoteType().getId()==2){
+//                if(vote.getPost().getPostType().getTypeName().equals("answer")){
+//                    vote.getVotedByUser().setReputation(vote.getVotedByUser().getReputation() - 1.5);
+//                }
+//            }
+//        }
     }
 
 }

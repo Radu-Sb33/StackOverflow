@@ -59,4 +59,9 @@ public class VoteService {
             userService.calculateReputation(postOwner);}
         return voteRepository.save(vote);
     }
+
+    public void deleteVote(Vote v)
+    {
+        voteRepository.delete(v);
+    }
 }

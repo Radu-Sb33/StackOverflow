@@ -1,10 +1,7 @@
 package com.codeelevate.stackoverflow_spring.service;
 
 import com.codeelevate.stackoverflow_spring.entity.*;
-import com.codeelevate.stackoverflow_spring.repository.IPostRepository;
-import com.codeelevate.stackoverflow_spring.repository.IPostTypeRepository;
-import com.codeelevate.stackoverflow_spring.repository.ITagRepository;
-import com.codeelevate.stackoverflow_spring.repository.IUserRepository;
+import com.codeelevate.stackoverflow_spring.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +19,12 @@ public class PostService {
     IPostTypeRepository postTypeRepository;
     @Autowired
     IUserRepository userRepository;
+    @Autowired
+    IVoteRepository voteRepository;
+    @Autowired
+    IPostTagRepository postTagRepository;
+    @Autowired
+    ICommentRepository commentRepository;
 
     public Post createPost(Post post) {
 
@@ -72,6 +75,44 @@ public class PostService {
         else {throw new IllegalArgumentException("Invalid post type"); }
         //postTypeRepository.save(post.getPostType());//de rezolvat
         return postRepository.save(post);
+    }
+
+    public Post getPostByID(Integer postId) {
+        return postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+    }
+
+    public void deletePost(Integer idPost) {
+        Post post = getPostByID(idPost);
+        post.getCreatedByUser().getPosts().remove(post);
+        if(post.getPostType().getTypeName().equals("answer")){
+            post.getParentQuestion().getAnswers().remove(post);
+        }
+        if(post.getPostType().getTypeName().equals("question")){
+            postRepository.deleteAll(post.getAnswers());
+        }
+        post.getPostType().getPosts().remove(post);
+        voteRepository.deleteAll(post.getVotes());
+        postTagRepository.deleteAll(post.getPostTags());
+        commentRepository.deleteAll(post.getComments());
+        postRepository.delete(post);
+    }
+
+    public Post updatePost(Integer id,Post postDetails){
+        return postRepository.findById(id).map(post -> {
+            if (Objects.equals(post.getPostType().getTypeName(), "question") && post.getParentQuestion() == null) {
+                post.setPostContent(postDetails.getPostContent());
+                post.setPostTitleQ(postDetails.getPostTitleQ());
+                post.setImg(postDetails.getImg());
+            }
+            else if (Objects.equals(post.getPostType().getTypeName(), "answer") && post.getParentQuestion() != null) {
+                post.setPostContent(postDetails.getPostContent());
+                post.setImg(postDetails.getImg());
+            }
+            else {
+                throw new RuntimeException("Post not found");
+            }
+            return postRepository.save(post);
+        }).orElseThrow(() -> new RuntimeException("Post not found"));
     }
 
     public List<Post> getAllPosts() {
@@ -173,29 +214,7 @@ public class PostService {
 //            return Optional.empty();
 //    }
 
-    public Post updatePost(Integer id, Post postDetails) {
-        return postRepository.findById(id).map(post -> {
-            if (Objects.equals(post.getPostType().getTypeName(), "question") && post.getParentQuestion() == null) {
-                post.setPostTitleQ(postDetails.getPostTitleQ());
-                post.setPostContent(postDetails.getPostContent());
-             //   post.setStatusQ(postDetails.getStatusQ());
-             //   post.setVoteCount(postDetails.getVoteCount());
-             //   post.setViewCount(postDetails.getViewCount());
 
-            }
-            else if (Objects.equals(post.getPostType().getTypeName(), "answer") && post.getParentQuestion() != null) {
-                post.setPostContent(postDetails.getPostContent());
-
-             //   post.setStatusA(postDetails.getStatusA());
-             //   post.setVoteCount(postDetails.getVoteCount());
-             //   post.setViewCount(postDetails.getViewCount());
-            }
-            else {
-                throw new RuntimeException("Post not found");
-            }
-            return postRepository.save(post);
-        }).orElseThrow(() -> new RuntimeException("Post not found"));
-    }
 
 
 }

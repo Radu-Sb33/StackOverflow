@@ -3,6 +3,7 @@ package com.codeelevate.stackoverflow_spring.entity;
 import com.codeelevate.stackoverflow_spring.service.UserService;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,12 +30,13 @@ public class Post {
 
 //    @Getter
 //    @Setter
+    //@JsonManagedReference
     @OneToMany(mappedBy="post")
     private List<Vote> votes;
 
 //    @Getter
 //    @Setter
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "created_by_user_id", nullable = false)
     private User createdByUser;
 
@@ -159,6 +161,7 @@ public class Post {
     }
 
     public void setPostTitleQ(String postTitleQ) {
+        if(postTitleQ==null){return;}
         this.postTitleQ = postTitleQ;
     }
 
@@ -167,6 +170,7 @@ public class Post {
     }
 
     public void setPostContent(String postContent) {
+        if(postContent==null){return;}
         this.postContent = postContent;
     }
 
@@ -183,6 +187,7 @@ public class Post {
     }
 
     public void setImg(String img) {
+        if(img==null){return;}
         this.img = img;
     }
 
@@ -191,6 +196,7 @@ public class Post {
     }
 
     public void setStatusQ(String statusQ) {
+        if(statusQ==null){return;}
         this.statusQ = statusQ;
     }
 

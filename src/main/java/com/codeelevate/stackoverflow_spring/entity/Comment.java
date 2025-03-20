@@ -65,6 +65,7 @@ public class Comment {
     }
 
     public void setCommentContent(String commentContent) {
+        if(commentContent==null){return;}
         this.commentContent = commentContent;
     }
 
