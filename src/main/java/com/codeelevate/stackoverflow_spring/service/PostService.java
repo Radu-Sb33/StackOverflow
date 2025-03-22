@@ -74,8 +74,12 @@ public class PostService {
        }
         else {throw new IllegalArgumentException("Invalid post type"); }
         //postTypeRepository.save(post.getPostType());//de rezolvat
+
+
         return postRepository.save(post);
     }
+
+
 
     public Post getPostByID(Integer postId) {
         return postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
@@ -84,16 +88,39 @@ public class PostService {
     public void deletePost(Integer idPost) {
         Post post = getPostByID(idPost);
         post.getCreatedByUser().getPosts().remove(post);
+        for(Comment comment:post.getComments()){
+            commentRepository.delete(comment);
+        }
+        for(Vote v:post.getVotes()){
+            voteRepository.delete(v);
+        }
+        for(PostTag p:post.getPostTags()){
+            postTagRepository.delete(p);
+        }
+
+        post.getPostType().getPosts().remove(post);
+
         if(post.getPostType().getTypeName().equals("answer")){
             post.getParentQuestion().getAnswers().remove(post);
         }
-        if(post.getPostType().getTypeName().equals("question")){
-            postRepository.deleteAll(post.getAnswers());
+        else if(post.getPostType().getTypeName().equals("question")){
+            for(Post x:post.getAnswers()){
+                for(Comment comment:x.getComments()){
+                    commentRepository.delete(comment);
+                }
+                for(Vote v:x.getVotes()){
+                    voteRepository.delete(v);
+                }
+                for(PostTag p:x.getPostTags()){
+                    postTagRepository.delete(p);
+                }
+            }
+            //postRepository.deleteAll(post.getAnswers());
+            for(Post p:post.getAnswers()){
+                postRepository.delete(p);
+            }
         }
-        post.getPostType().getPosts().remove(post);
-        voteRepository.deleteAll(post.getVotes());
-        postTagRepository.deleteAll(post.getPostTags());
-        commentRepository.deleteAll(post.getComments());
+
         postRepository.delete(post);
     }
 
@@ -119,7 +146,7 @@ public class PostService {
         List<Post> x = (List<Post>) postRepository.findAll();
         x.sort(Comparator.comparing(Post::getPostedDate).reversed());
         return x;
-    }//la getAllPosts trb sa le luam de la cea mai noua la cea mai veche
+    }
 
     public List<Post> getAllPostsByUser(String username) {
         List<Post> allPosts = new ArrayList<>();

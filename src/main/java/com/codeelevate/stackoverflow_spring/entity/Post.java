@@ -36,7 +36,7 @@ public class Post {
 
 //    @Getter
 //    @Setter
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "created_by_user_id", nullable = false)
     private User createdByUser;
 

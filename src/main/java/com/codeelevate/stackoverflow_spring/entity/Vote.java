@@ -29,7 +29,7 @@ public class Vote {
     private Post post;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "voted_by_user_id", nullable = false)
     private User votedByUser;
 

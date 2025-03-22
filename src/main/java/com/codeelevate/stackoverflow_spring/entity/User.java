@@ -69,7 +69,7 @@ public class User {
 
 //    @Setter
 //    @Getter
-    @OneToMany(mappedBy = "createdByUser", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "createdByUser")
     private List<Post> posts=new ArrayList<>();
 
 //    @Setter

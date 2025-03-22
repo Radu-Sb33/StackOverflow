@@ -1,5 +1,6 @@
 package com.codeelevate.stackoverflow_spring.service;
 
+import com.codeelevate.stackoverflow_spring.PasswordEncryptionUtil;
 import com.codeelevate.stackoverflow_spring.entity.*;
 import com.codeelevate.stackoverflow_spring.repository.*;
 import com.codeelevate.stackoverflow_spring.repository.IVoteRepository;
@@ -31,8 +32,8 @@ public class UserService {
     @Autowired
     ITagRepository tagRepository;
 
-
     public User createUser(User user) {
+        user.setPassword(PasswordEncryptionUtil.hashPassword(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -62,11 +63,16 @@ public class UserService {
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
+            //user.setPassword(PasswordEncryptionUtil.hashPassword(userDetails.getPassword()));
             user.setAbout(userDetails.getAbout());
             //user.setModerator(userDetails.getModerator()); //se face din admin
 //            user.setReputation(userDetails.getReputation());
             //user.setBanned(userDetails.getBanned()); //se face din admin
             user.setImg(userDetails.getImg());
+
+            if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+                user.setPassword(PasswordEncryptionUtil.hashPassword(userDetails.getPassword()));
+            }
             return userRepository.save(user);
         }).orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -129,6 +135,13 @@ public class UserService {
 //                }
 //            }
 //        }
+    }
+
+    public boolean authenticateUser(String username, String password) {
+        User user = (User) userRepository.findByUsername(username);
+        if (user == null) return false;
+
+        return PasswordEncryptionUtil.verifyPassword(password, user.getPassword());
     }
 
 }
