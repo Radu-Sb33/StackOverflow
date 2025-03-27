@@ -1,5 +1,6 @@
 package com.codeelevate.stackoverflow_spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class PostType {
 //    @Getter
 //    @Setter
     @OneToMany(mappedBy = "postType")
+    @JsonBackReference
     private List<Post> posts;
 
 //    @Setter

@@ -1,8 +1,5 @@
 package com.codeelevate.stackoverflow_spring.entity;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +14,7 @@ import java.util.List;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id",
         scope = User.class)
+//@JsonIgnoreProperties({"email", "password", "about", "reputation", "img", "posts", "comments", "tags", "votes", "banned", "moderator"})
 public class User {
 
    // @Getter

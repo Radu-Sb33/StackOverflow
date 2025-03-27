@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 public class PostController {
     @Autowired
     private PostService postService;
+
     @GetMapping("/getAllPosts")
     @ResponseBody
     public List<Post> getPosts(){

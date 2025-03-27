@@ -51,7 +51,7 @@ public class PostService {
         }
         else if("answer".equals(postType.getTypeName()) && post.getParentQuestion()!=null){
             post.setStatusQ(null);
-
+            post.setPostTitleQ(null);
             Integer postQuestionId=post.getParentQuestion().getId();
             Post parentQuestion=postRepository.findById(postQuestionId).orElseThrow(() -> new RuntimeException("Question not found with id: " + postQuestionId));
             post.setParentQuestion(parentQuestion);
@@ -144,7 +144,7 @@ public class PostService {
 
     public List<Post> getAllPosts() {
         List<Post> x = (List<Post>) postRepository.findAll();
-        x.sort(Comparator.comparing(Post::getPostedDate).reversed());
+        x.sort(Comparator.comparing(Post::getPostedDate));
         return x;
     }
 

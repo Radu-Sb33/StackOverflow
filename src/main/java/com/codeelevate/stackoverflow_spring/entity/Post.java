@@ -19,8 +19,8 @@ import java.util.List;
 @Table(name = "post")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")//,
-        //scope = Post.class)
+        property = "id",
+        scope = Post.class)
 public class Post {
 
     //@Getter

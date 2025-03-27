@@ -1,5 +1,6 @@
 package com.codeelevate.stackoverflow_spring.service;
 
+import com.codeelevate.stackoverflow_spring.PasswordEncryptionUtil;
 import com.codeelevate.stackoverflow_spring.entity.*;
 import com.codeelevate.stackoverflow_spring.repository.ICommentRepository;
 import com.codeelevate.stackoverflow_spring.repository.IPostRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -42,6 +44,26 @@ public class CommentService {
         post.getComments().add(comment);
 
         return commentRepository.save(comment);
+    }
+
+    public Comment getCommByID(Integer commID) {
+        return commentRepository.findById(commID).orElseThrow(() -> new RuntimeException("Comment not found with id: " + commID));
+    }
+
+    public void deleteComment(Integer id){
+        Comment c = getCommByID(id);
+        commentRepository.delete(c);
+    }
+
+    public List<Comment> getAllComments(){
+        return (List<Comment>) commentRepository.findAll();
+    }
+
+    public Comment updateComment(Integer id, Comment commDetails) {
+        return commentRepository.findById(id).map(c -> {
+            c.setCommentContent(commDetails.getCommentContent());
+            return commentRepository.save(c);
+        }).orElseThrow(() -> new RuntimeException("Comment not found"));
     }
 
 }
