@@ -1,0 +1,96 @@
+<p-table [value]="users" sortField="username" sortMode="single" dataKey="username" rowGroupMode="subheader" groupRowsBy="username" [tableStyle]="{'min-width': '70rem'}">
+  <ng-template #header>
+    <tr>
+      <th style="width:100%">Username</th>
+    </tr>
+  </ng-template>
+
+  <!-- Gruparea principală după username -->
+  <ng-template #groupheader let-user let-expanded="expanded">
+    <tr>
+      <td>
+        <button
+          type="button"
+          pButton
+          pRipple
+          [pRowToggler]="user"
+          text
+          rounded
+          plain
+          class="mr-2"
+          [icon]="expanded ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right'">
+        </button>
+        <span class="font-bold ml-2">{{user.username}}</span>
+      </td>
+    </tr>
+  </ng-template>
+
+  <!-- Randurile expandate cu detaliile -->
+  <ng-template #expandedrow let-user>
+    <tr>
+      <td colspan="1">
+        <div class="bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+          <div class="flex flex-col gap-4">
+            <!-- Email Section -->
+            <div class="flex items-center gap-3">
+              <div class="text-blue-400">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-sm font-medium text-gray-400">Email</h3>
+                <p class="text-lg font-semibold text-white">{{user.email}}</p>
+              </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="flex items-start gap-3">
+              <div class="text-yellow-400">
+                <i class="fas fa-info-circle"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-sm font-medium text-gray-400">About</h3>
+                <p class="text-white break-words">
+                  {{user.about || 'No information available'}}
+                </p>
+              </div>
+            </div>
+
+            <!-- Reputation Section with Badge -->
+            <div class="flex items-center gap-3">
+              <div class="text-green-400">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-sm font-medium text-gray-400">Reputation</h3>
+                <div class="bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  {{user.reputation}} Points
+                </div>
+              </div>
+            </div>
+
+            <!-- Creation Date Section -->
+            <div class="flex items-center gap-3">
+              <div class="text-purple-400">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-sm font-medium text-gray-400">Joined</h3>
+                <p class="text-white">
+                  {{user.creationDate}}
+                </p>
+              </div>
+            </div>
+            <div class="flex justify-end mt-4 pr-2"> <!-- Aliniat la dreapta prin justify-end și un pic de padding -->
+              <button
+                class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-all shadow-md"
+                [disabled]="user.is_banned">
+                <i class="fa-solid fa-user-slash"></i>Ban User
+              </button>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+
+</p-table>

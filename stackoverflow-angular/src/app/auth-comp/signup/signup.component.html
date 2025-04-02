@@ -1,1 +1,37 @@
-<p>signup works!</p>
+<div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
+  <div class="text-center mb-5">
+    <img src="assets/hyper.svg" alt="Image" height="50" class="mb-3">
+    <div class="text-900 text-3xl font-medium mb-3">Register Now</div>
+    <span class="text-600 font-medium line-height-3">Already have an account?</span>
+    <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" routerLink="/login">Log into your account!</a>
+  </div>
+
+  <div>
+    <label for="email1" class="block text-900 font-medium mb-2">Email</label>
+    <input id="email1" type="email" placeholder="Email address" pInputText class="w-full mb-3" [(ngModel)]="user.email">
+
+    <label for="username1" class="block text-900 font-medium mb-2">Username</label>
+    <input id="username1" type="text" placeholder="Username" pInputText class="w-full mb-3" [(ngModel)]="user.username">
+
+    <label for="password1" class="block text-900 font-medium mb-2">Password</label>
+    <input id="password1" type="password" placeholder="Password" pInputText class="w-full mb-3" [(ngModel)]="user.password">
+
+    <label for="confirmPassword1" class="block text-900 font-medium mb-2">Confirm Password</label>
+    <input id="confirmPassword1" type="password" placeholder="Confirm Password" pInputText class="w-full mb-3" [(ngModel)]="confirmPassword">
+
+    <div *ngIf="message" [ngClass]="{'success-message': registrationSuccess, 'error-message': !registrationSuccess}">
+      {{ message }}
+    </div>
+
+
+    <div class="flex align-items-center justify-content-between mb-6">
+      <div class="flex align-items-center">
+        <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
+        <label for="rememberme1" class="text-900">Remember me</label>
+      </div>
+      <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
+    </div>
+
+    <button pButton pRipple label="Register" icon="pi pi-user" class="w-full" (click)="register()"></button>
+  </div>
+</div>

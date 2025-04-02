@@ -1,0 +1,18 @@
+<div class="questions-container">
+  <div *ngIf="isAuthenticated" class="add-question-button">
+    <button pButton pRipple label="Add Question" icon="pi pi-plus" (click)="navigateToAddQuestion()"></button>
+  </div>
+  <div *ngFor="let question of questions" class="question-card">
+    <h3>{{ question.postTitleQ }}</h3>
+    <p>{{ question.postContent }}</p>
+    <button (click)="loadAnswers(question.id)">View Answers</button>
+
+    <div *ngIf="question.answers">
+      <h4>Answers:</h4>
+      <div *ngFor="let answer of question.answers" class="answer-card">
+        <p>{{ answer.postContent }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
