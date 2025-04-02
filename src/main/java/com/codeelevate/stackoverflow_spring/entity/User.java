@@ -178,9 +178,9 @@ public class User {
         this.reputation = reputation;
     }
 
-//    public Timestamp getCreationDate() {
-//        return creationDate;
-//    }
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
 //
 //    public void setCreationDate(Timestamp creationDate) {
 //        this.creationDate = creationDate;

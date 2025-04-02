@@ -4,7 +4,9 @@ import com.codeelevate.stackoverflow_spring.entity.Post;
 import com.codeelevate.stackoverflow_spring.entity.User;
 import com.codeelevate.stackoverflow_spring.service.PostService;
 import com.codeelevate.stackoverflow_spring.service.UserService;
+import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,19 @@ public class PostController {
     public Post createPost(@RequestBody Post post) {
         return postService.createPost(post);
     }
+
+    @GetMapping("/questions")
+    public ResponseEntity<List<Post>> getAllQuestions() {
+        List<Post> questions = postService.getAllQuestions();
+        return ResponseEntity.ok(questions);
+    }
+
+    @GetMapping("/questions/{questionId}/answers")
+    public ResponseEntity<List<Post>> getAllAnswers(@PathVariable Integer questionId) {
+        List<Post> answers = postService.getAllAnswersForQuestion(questionId);
+        return ResponseEntity.ok(answers);
+    }
+
 
 //    @GetMapping("/getPostById/{id}")
 //    @ResponseBody

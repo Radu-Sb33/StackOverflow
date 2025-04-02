@@ -148,6 +148,28 @@ public class PostService {
         return x;
     }
 
+    public List<Post> getAllQuestions() {
+        List<Post> x = (List<Post>) postRepository.findAll();
+        List<Post> y = new ArrayList<>();
+        for(Post p:x){
+            if(p.getPostType().getTypeName().equals("question")){
+                y.add(p);
+            }
+        }
+        return y;
+    }
+
+    public List<Post> getAllAnswersForQuestion(Integer questionId) {
+        List<Post> x = (List<Post>) postRepository.findAll();
+        List<Post> y = new ArrayList<>();
+        for(Post p:x){
+            if(p.getPostType().getTypeName().equals("answer") && p.getParentQuestion().getId().equals(questionId)){
+                y.add(p);
+            }
+        }
+        return y;
+    }
+
     public List<Post> getAllPostsByUser(String username) {
         List<Post> allPosts = new ArrayList<>();
         List<Post> posts = (List<Post>) postRepository.findAll();

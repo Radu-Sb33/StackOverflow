@@ -103,6 +103,9 @@ public class UserService {
     public List<User> findAllUsersByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
     public void calculateReputation(User user) {
         user.setReputation(0.0);
@@ -137,11 +140,18 @@ public class UserService {
 //        }
     }
 
-    public boolean authenticateUser(String username, String password) {
-        User user = (User) userRepository.findByUsername(username);
-        if (user == null) return false;
+    public boolean authenticateUser(String email, String password) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            return false; // No user found with the given email
+        }
 
+        User user = optionalUser.get();
         return PasswordEncryptionUtil.verifyPassword(password, user.getPassword());
     }
+
+//    public void banUser(User user){
+//        if(!user.getModerator() && )
+//    }
 
 }
