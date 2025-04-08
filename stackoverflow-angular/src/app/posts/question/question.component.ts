@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
 import { PostService } from '../../services/post.service';
+import {Router} from "@angular/router";
 @Component({
   selector: 'app-question',
   standalone: true,
@@ -11,7 +12,8 @@ import { PostService } from '../../services/post.service';
     NgIf,
     ButtonDirective,
     Ripple,
-    NgForOf
+    NgForOf,
+    DatePipe
   ],
   templateUrl: './question.component.html',
   styleUrl: './question.component.scss'
@@ -19,7 +21,7 @@ import { PostService } from '../../services/post.service';
 export class QuestionComponent implements OnInit{
   questions: any[] = [];
   isAuthenticated = false;
-  constructor(private userService: UserService, private postService: PostService) {
+  constructor(private userService: UserService, private postService: PostService, private router: Router) {
   }
 
   ngOnInit() {
@@ -35,7 +37,10 @@ export class QuestionComponent implements OnInit{
   }
 
   navigateToAddQuestion() {
-    console.log("Fac intrebari");
+    this.router.navigate(['/add-question']);
+  }
+  navigateToAddAnswer() {
+    this.router.navigate(['/add-answer']);
   }
   loadAnswers(questionId: number): void {
     this.postService.getAnswersForQuestion(questionId).subscribe({

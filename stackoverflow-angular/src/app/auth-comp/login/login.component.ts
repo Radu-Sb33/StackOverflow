@@ -56,6 +56,10 @@ export class LoginComponent {
         alert('You have logged in!');
         this.userService.isAuthenticated = true;
         // Store the token or user info in local storage or session storage
+        const userId = this.userService.getUserIDbyEmail(email); // Extract the user ID
+        //localStorage.setItem('userId', userId.toString());
+        localStorage.setItem('userId', userId.toString());
+        localStorage.setItem('emailLogged', email);
         localStorage.setItem('authToken', response);
 
         // Redirect to the desired route after successful login

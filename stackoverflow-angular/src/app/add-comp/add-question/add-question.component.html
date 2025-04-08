@@ -1,0 +1,22 @@
+<div class="add-question-container">
+  <h2>Add a New Question</h2>
+  <form [formGroup]="addQuestionForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="title">Title</label>
+      <input id="title" type="text" pInputText formControlName="title" placeholder="Enter question title" />
+      <small *ngIf="addQuestionForm.get('title')?.invalid && addQuestionForm.get('title')?.touched" class="p-error">
+        Title is required and must be at least 5 characters.
+      </small>
+    </div>
+
+    <div>
+      <label for="content">Content</label>
+      <textarea id="content" pInputTextarea formControlName="content" placeholder="Enter question content"></textarea>
+      <small *ngIf="addQuestionForm.get('content')?.invalid && addQuestionForm.get('content')?.touched" class="p-error">
+        Content is required and must be at least 10 characters.
+      </small>
+    </div>
+
+    <button pButton pRipple label="Submit" type="submit" [disabled]="addQuestionForm.invalid"></button>
+  </form>
+</div>

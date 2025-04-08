@@ -8,13 +8,29 @@ import {UsersComponent} from "../users/users.component";
   providedIn: 'root',
 })
 export class UserService {
-  isAuthenticated = false;
+  public isAuthenticated = false;
   private baseUrl = 'http://localhost:8080/user'; // Adjust the backend URL if needed
+  //public emailLogged: string | undefined;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    //this.checkAuthentication();
+  }
+
+  private checkAuthentication(): void {
+    const token = localStorage.getItem('authToken');
+    this.isAuthenticated = !!token; // Set isAuthenticated based on token presence
+  }
 
   public getUsers(): Observable<User[]>{
     return this.http.get<User[]>(`${this.baseUrl}/getAllUsers`);
+  }
+
+  public getUserByEmail(email: string): Observable<User>{
+    return this.http.get<User>(`${this.baseUrl}/get/byEmail/${email}`)
+  }
+
+  public getUserIDbyEmail(email: string): Observable<number>{
+    return this.http.get<number>(`${this.baseUrl}/getUserIdByEmail`);
   }
 
   public register(user: Partial<User>): Observable<User> {

@@ -5,12 +5,18 @@
   <div *ngFor="let question of questions" class="question-card">
     <h3>{{ question.postTitleQ }}</h3>
     <p>{{ question.postContent }}</p>
-    <button (click)="loadAnswers(question.id)">View Answers</button>
 
+    <p id="asked" class="bck">  <strong>Asked by:</strong> {{ question.createdByUser.username }}</p>
+    <p id="asked" class="bck"><strong>Posted on:</strong> {{ question.postedDate | date }}</p>
+    <div *ngIf="isAuthenticated" class="add-answer-button">
+      <button pButton pRipple label="Add Answer" icon="pi pi-plus" (click)="navigateToAddAnswer()"></button>
+    </div>
     <div *ngIf="question.answers">
       <h4>Answers:</h4>
       <div *ngFor="let answer of question.answers" class="answer-card">
         <p>{{ answer.postContent }}</p>
+        <p><strong>Answered by:</strong> {{ answer.createdByUser.username }}</p>
+        <p><strong>Posted on:</strong> {{ answer.postedDate | date }}</p>
       </div>
     </div>
   </div>
