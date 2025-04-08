@@ -40,6 +40,19 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @GetMapping("/getUserIdByEmail")
+    @ResponseBody
+    public ResponseEntity<?> getUserIdByEmail(@RequestParam String email) {
+        Integer userId = userService.findUserIdByEmail(email);
+
+        if (userId != null) {
+            return ResponseEntity.ok(Map.of("userId", userId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+    }
+
     @PutMapping("/updateUserById/{id}")
     @ResponseBody
     public User updateUser(@PathVariable Integer id, @RequestBody User userDetails) {

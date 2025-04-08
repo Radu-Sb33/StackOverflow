@@ -5,6 +5,8 @@ import com.codeelevate.stackoverflow_spring.repository.IPostTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PostTypeService {
     @Autowired
@@ -13,4 +15,8 @@ public class PostTypeService {
     public PostType getPostTypeByName(String name) {
         return postTypeRepository.findByPostTypeName(name);
     }
+    public Optional<PostType> getPostTypeByID(Integer id) {
+        return postTypeRepository.findById(id);
+    }
+
 }

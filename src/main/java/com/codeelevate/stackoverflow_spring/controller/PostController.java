@@ -1,10 +1,9 @@
 package com.codeelevate.stackoverflow_spring.controller;
 
 import com.codeelevate.stackoverflow_spring.entity.Post;
-import com.codeelevate.stackoverflow_spring.entity.User;
+import com.codeelevate.stackoverflow_spring.entity.PostType;
 import com.codeelevate.stackoverflow_spring.service.PostService;
-import com.codeelevate.stackoverflow_spring.service.UserService;
-import org.aspectj.weaver.patterns.TypePatternQuestions;
+import com.codeelevate.stackoverflow_spring.service.PostTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,10 +15,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/post")
 public class PostController {
     @Autowired
     private PostService postService;
+    @Autowired
+    private PostTypeService postTypeService;
+
 
     @GetMapping("/getAllPosts")
     @ResponseBody
@@ -35,8 +38,9 @@ public class PostController {
 
     @PostMapping("/createPost")
     @ResponseBody
-    public Post createPost(@RequestBody Post post) {
-        return postService.createPost(post);
+    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+        Post createdPost = postService.createPost(post);
+        return ResponseEntity.ok(createdPost);
     }
 
     @GetMapping("/questions")
@@ -51,12 +55,17 @@ public class PostController {
         return ResponseEntity.ok(answers);
     }
 
+    @GetMapping("/getType/{id}")
+    @ResponseBody
+    public Optional<PostType> getPostType(@PathVariable Integer id) {
+        return postTypeService.getPostTypeByID(id);
+    }
 
-//    @GetMapping("/getPostById/{id}")
-//    @ResponseBody
-//    public Optional<Post> getPostById(@PathVariable Integer id) {
-//        return postService.getPostById(id);
-//    }
+    @GetMapping("/getPostById/{id}")
+    @ResponseBody
+    public Optional<Post> getPostById(@PathVariable Integer id) {
+        return postService.getPostById(id);
+    }
 
 //    @GetMapping("/getAllPostsByTitleAndContent/{input}")
 //    @ResponseBody

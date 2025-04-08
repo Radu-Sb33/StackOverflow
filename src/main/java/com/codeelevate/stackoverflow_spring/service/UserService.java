@@ -106,6 +106,11 @@ public class UserService {
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+    public Integer findUserIdByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(User::getId) // Extrage ID-ul din obiectul User
+                .orElse(null);  // Returnează null dacă utilizatorul nu există
+    }
 
     public void calculateReputation(User user) {
         user.setReputation(0.0);

@@ -5,8 +5,6 @@ import com.codeelevate.stackoverflow_spring.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -34,10 +32,16 @@ public class PostService {
         post.setCreatedByUser(user);
 
         String name = post.getPostType().getTypeName();
-        PostType postType=postTypeRepository.findByPostTypeName(name);
+        Integer id = post.getPostType().getId();
+        //PostType postType=postTypeRepository.findByPostTypeName(name);
+        PostType postType=postTypeRepository.findById(id).orElse(null);
         post.setPostType(postType);
+        assert postType != null;
 
-        if("question".equals(postType.getTypeName()) && post.getParentQuestion()==null){
+
+        //if("question".equals(postType.getTypeName()) && post.getParentQuestion()==null){
+
+        if(postType.getId()==1 && post.getParentQuestion()==null){
             post.setStatusQ("Received");
             if (user.getPosts() == null) {
                 user.setPosts(new ArrayList<>());
@@ -49,7 +53,8 @@ public class PostService {
             postType.getPosts().add(post);
 
         }
-        else if("answer".equals(postType.getTypeName()) && post.getParentQuestion()!=null){
+        //else if("answer".equals(postType.getTypeName()) && post.getParentQuestion()!=null){
+        else  if(postType.getId()==2 && post.getParentQuestion()!=null){
             post.setStatusQ(null);
             post.setPostTitleQ(null);
             Integer postQuestionId=post.getParentQuestion().getId();
@@ -250,6 +255,9 @@ public class PostService {
         return null;
     }
 
+    public Optional<Post> getPostById(int id){
+        return postRepository.findById(id);
+    }
 
 //    public List<Post> getAllAcceptedQuestions() {
 //        return (List<Post>) postRepository.findByAcceptedQuestions();

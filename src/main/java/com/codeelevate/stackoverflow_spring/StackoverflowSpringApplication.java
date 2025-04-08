@@ -9,6 +9,7 @@ public class StackoverflowSpringApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(StackoverflowSpringApplication.class, args);
+		System.out.println();
 	}
 
 
