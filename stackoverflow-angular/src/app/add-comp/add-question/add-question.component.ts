@@ -96,7 +96,7 @@ export class AddQuestionComponent {
 
         // Store the ID in localStorage
         if (questionId) {
-          localStorage.setItem('idParinte', questionId.toString());
+          //localStorage.setItem('idParinte', questionId.toString());
           console.log('Stored question ID in localStorage:', questionId);
         }
         this.router.navigate(['/questions']);

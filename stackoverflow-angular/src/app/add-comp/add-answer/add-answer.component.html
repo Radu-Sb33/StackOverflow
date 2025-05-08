@@ -1,1 +1,30 @@
-<p>add-answer works!</p>
+<div class="container mx-auto p-6 bg-white rounded-lg shadow-md max-w-md">
+  <h2 class="text-2xl font-bold mb-6 text-center">Add Answer</h2>
+
+  <form [formGroup]="addAnswerForm" (ngSubmit)="onSubmit()">
+    <div class="mb-4">
+      <label for="content" class="block text-gray-700 text-sm font-bold mb-2">
+        Answer Content:
+      </label>
+      <textarea
+        id="content"
+        name="content"
+        rows="5"
+        class="p-inputtextarea w-full resize-y"
+        placeholder="Enter your answer here..."
+        required
+        minlength="10"
+        formControlName="content"
+      ></textarea>
+    </div>
+
+    <div class="flex items-center justify-center">
+      <button
+        type="submit"
+        class="p-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        pRipple
+        [disabled]="addAnswerForm.invalid"> Submit Answer
+      </button>
+    </div>
+  </form>
+</div>

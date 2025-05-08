@@ -17,7 +17,7 @@ export class PostService {
     return this.http.get<any[]>(`${this.baseUrl}/questions`);
   }
 
-  getByID(id: number): Observable<Question> {
+  getByID(id: number | null): Observable<Question> {
     return this.http.get<any>(`${this.baseUrl}/getPostById/${id}`);
   }
 

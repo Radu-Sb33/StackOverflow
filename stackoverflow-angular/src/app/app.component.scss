@@ -1,0 +1,56 @@
+.navbar-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 2rem;
+
+  input {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.4rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #0077cc;
+    }
+  }
+}
+
+.avatar-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.avatar-link:hover {
+  box-shadow: 0 0 0 3px var(--primary-color-light, #cce4ff);
+  transform: scale(1.05);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  cursor: pointer;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+

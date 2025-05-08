@@ -9,7 +9,7 @@
     <p id="asked" class="bck">  <strong>Asked by:</strong> {{ question.createdByUser.username }}</p>
     <p id="asked" class="bck"><strong>Posted on:</strong> {{ question.postedDate | date }}</p>
     <div *ngIf="isAuthenticated" class="add-answer-button">
-      <button pButton pRipple label="Add Answer" icon="pi pi-plus" (click)="navigateToAddAnswer()"></button>
+      <button pButton pRipple label="Add Answer" icon="pi pi-plus" (click)="navigateToAddAnswer(question.id)"></button>
     </div>
     <div *ngIf="question.answers">
       <h4>Answers:</h4>

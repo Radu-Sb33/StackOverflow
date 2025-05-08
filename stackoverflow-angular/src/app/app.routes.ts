@@ -7,6 +7,7 @@ import {NgModule} from "@angular/core";
 import {UsersComponent} from "./users/users.component";
 import {AddQuestionComponent} from "./add-comp/add-question/add-question.component";
 import {HomeComponent} from "./home/home.component";
+import {AddAnswerComponent} from "./add-comp/add-answer/add-answer.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'answers', component: AnswersComponent},
   { path: 'users', component: UsersComponent},
   { path: 'add-question', component: AddQuestionComponent},
+  { path: 'add-answer', component: AddAnswerComponent},
   {path: 'home', component: HomeComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full'}
 ];
