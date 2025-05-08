@@ -1,23 +1,44 @@
-<p-menubar [model]="items">
+<p-menubar [model]="items" class="navbar">
+  <!-- Start: Logo personalizat -->
   <ng-template #start>
-    <svg width="33" height="35" viewBox="0 0 33 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="..." fill="var(--primary-color)" />
-    </svg>
+    <div class="navbar-left flex items-center">
+      <a routerLink="/home">
+        <img src="assets/hyper.svg" alt="Logo" class="logo w-10 h-10" />
+      </a>
+    </div>
   </ng-template>
+
+  <!-- Item Template -->
   <ng-template #item let-item>
-    <a pRipple [routerLink]="item.routerLink" class="flex items-center p-menubar-item-link">
+    <a
+      pRipple
+      [routerLink]="item.routerLink"
+      routerLinkActive="active"
+      class="flex items-center p-menubar-item-link navbar-link"
+    >
       <i [ngClass]="item.icon" class="mr-2 text-lg"></i>
       <span>{{ item.label }}</span>
     </a>
   </ng-template>
+
+  <!-- End: Căutare + Avatar -->
   <ng-template #end>
-    <div class="flex items-center gap-2">
-      <input type="text" pInputText placeholder="Search" class="w-36" />
-      <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />
+    <div class="navbar-end flex items-center gap-3">
+      <div class="navbar-search">
+        <input
+          type="text"
+          placeholder="Search questions..."
+        />
+      </div>
+      <a [routerLink]="['/user-profile']" class="avatar-link" pRipple>
+        <p-avatar
+          image="assets/avatar.png"
+          shape="circle"
+          class="avatar"
+        />
+      </a>
     </div>
   </ng-template>
 </p-menubar>
-
-
 
 <router-outlet></router-outlet>

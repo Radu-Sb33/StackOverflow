@@ -53,6 +53,7 @@ export class LoginComponent {
     this.userService.login({ email, password }).subscribe({
       next: (response: string) => {
         console.log('Login successful:', response);
+        console.log('Autentificat: ',this.userService.isAuthenticated);
         alert('You have logged in!');
         this.userService.isAuthenticated = true;
         // Store the token or user info in local storage or session storage
@@ -63,7 +64,7 @@ export class LoginComponent {
         localStorage.setItem('authToken', response);
 
         // Redirect to the desired route after successful login
-        this.router.navigate(['/home']); // Replace '/dashboard' with your desired route
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         console.error('Login failed:', err);
@@ -72,4 +73,6 @@ export class LoginComponent {
       }
     });
   }
+
+
 }

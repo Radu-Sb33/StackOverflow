@@ -39,9 +39,11 @@ export class QuestionComponent implements OnInit{
   navigateToAddQuestion() {
     this.router.navigate(['/add-question']);
   }
-  navigateToAddAnswer() {
+  navigateToAddAnswer(questionId: number) {
+    localStorage.setItem('idParinte', questionId.toString());
     this.router.navigate(['/add-answer']);
   }
+
   loadAnswers(questionId: number): void {
     this.postService.getAnswersForQuestion(questionId).subscribe({
       next: (answers) => {
