@@ -1,0 +1,42 @@
+<div class="profile-page-container">
+  <div *ngIf="isLoading" class="profile-loading"> <p>Loading profile data...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="profile-error" role="alert"> <strong class="font-bold">Error!</strong> <span class="block sm:inline">{{ errorMessage }}</span> </div>
+
+  <div *ngIf="displayableUser && !isLoading && !errorMessage" class="profile-card"> <div class="profile-sidebar md:w-1/3"> <img
+    [src]="displayableUser.img || 'assets/avatar.png'"
+    alt="Profile image of {{ displayableUser.username }}"
+    class="profile-avatar" />
+    <h1 class="profile-username">{{ displayableUser.username }}</h1>
+    <p class="profile-email">{{ displayableUser.email }}</p>
+    <div class="profile-badges"> <span class="badge badge-reputation"> Reputation: {{ displayableUser.reputation }}
+        </span>
+      <span *ngIf="displayableUser.is_moderator" class="badge badge-moderator">
+          Moderator
+        </span>
+    </div>
+  </div>
+
+    <div class="profile-main-content md:w-2/3"> <div class="profile-section"> <h2 class="section-title">About Me</h2>
+      <div class="section-content">
+        <p>{{ displayableUser.about || 'No description added.' }}</p>
+      </div>
+    </div>
+
+      <div class="profile-section">
+        <h2 class="section-title">Account Information</h2>
+        <div class="section-content">
+          <ul>
+            <li><strong>User ID:</strong> {{ displayableUser.id }}</li>
+            <li>
+              <strong>Registration Date:</strong>
+              {{ displayableUser.creation_date_for_display | date:'MMMM dd, yyyy, HH:mm' }} </li>
+            <li><strong>Banned:</strong> {{ displayableUser.is_banned ? 'Yes' : 'No' }}</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@ import {UsersComponent} from "./users/users.component";
 import {AddQuestionComponent} from "./add-comp/add-question/add-question.component";
 import {HomeComponent} from "./home/home.component";
 import {AddAnswerComponent} from "./add-comp/add-answer/add-answer.component";
+import {UserProfileComponent} from "./user-profile/user-profile.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'add-question', component: AddQuestionComponent},
   { path: 'add-answer', component: AddAnswerComponent},
   {path: 'home', component: HomeComponent },
+  { path: 'user-profile', component: UserProfileComponent},
   { path: '', redirectTo: 'home', pathMatch: 'full'}
 ];
 

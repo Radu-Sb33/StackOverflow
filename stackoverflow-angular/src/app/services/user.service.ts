@@ -31,8 +31,7 @@ export class UserService {
     // 2. Actualizează starea de autentificare
     this.isAuthenticated = false;
 
-    // 3. Navighează către pagina de login sau o altă pagină publică
-    // Ajustează '/login' cu ruta corectă către pagina ta de login
+
 
     this.router.navigate(['/login']);
   }

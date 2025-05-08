@@ -1,0 +1,186 @@
+// src/app/user-profile/user-profile.component.scss
+
+// Variabile pentru culori și fonturi (opțional, dar util pentru consistență)
+$primary-font: 'Roboto', 'Helvetica Neue', sans-serif; // Asigură-te că ai acest font importat sau folosește unul standard
+$primary-text-color: #333;
+$secondary-text-color: #555;
+$accent-color: #007bff; // Un albastru plăcut
+$light-gray-bg: #f8f9fa;
+$white-bg: #fff;
+$border-color: #e0e0e0;
+$shadow-color: rgba(0, 0, 0, 0.1);
+
+// Stiluri pentru containerul principal al paginii de profil
+.profile-page-container {
+  max-width: 900px; // Lățimea maximă a conținutului paginii
+  margin: 2rem auto; // Centrează containerul și adaugă spațiu sus/jos
+  padding: 1rem; // Spațiere interioară
+  font-family: $primary-font;
+
+  // Stiluri pentru starea de încărcare
+  .profile-loading,
+  .profile-error {
+    text-align: center;
+    padding: 3rem 1rem;
+    font-size: 1.1rem;
+    color: $secondary-text-color;
+  }
+
+  .profile-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.25rem;
+  }
+}
+
+// Cardul principal al profilului
+.profile-card {
+  background-color: $white-bg;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px $shadow-color;
+  overflow: hidden; // Pentru a menține colțurile rotunjite la imaginea de fundal a coloanei
+  display: flex; // Folosim flex pentru layout-ul pe două coloane
+  flex-direction: column; // Implicit pe mobil
+
+  @media (min-width: 768px) { // md breakpoint
+    flex-direction: row;
+  }
+}
+
+// Coloana din stânga (imagine, nume, email, reputație)
+.profile-sidebar {
+  background-color: $light-gray-bg; // Un fundal ușor diferit pentru coloana laterală
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 1px solid $border-color;
+
+  @media (min-width: 768px) { // md breakpoint
+    width: 33.3333%; // O treime din lățime
+    border-bottom: none;
+    border-right: 1px solid $border-color;
+  }
+
+  .profile-avatar {
+    width: 150px; // Mărime mai mare pentru avatar
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover; // Asigură că imaginea acoperă spațiul fără a se deforma
+    margin-bottom: 1.5rem;
+    border: 4px solid $white-bg; // O mică bordură albă în jurul avatarului
+    box-shadow: 0 2px 6px $shadow-color;
+  }
+
+  .profile-username {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: $primary-text-color;
+    margin-bottom: 0.25rem;
+  }
+
+  .profile-email {
+    font-size: 0.9rem;
+    color: $secondary-text-color;
+    margin-bottom: 1rem;
+    word-break: break-all; // Previne overflow la emailuri lungi
+  }
+
+  .profile-badges {
+    margin-top: 0.5rem;
+    .badge {
+      display: inline-block;
+      padding: 0.3em 0.8em;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: 0.25rem;
+      color: $white-bg;
+      margin: 0.25rem;
+
+      &.badge-reputation {
+        background-color: $accent-color;
+      }
+
+      &.badge-moderator {
+        background-color: #28a745; // Verde pentru moderator
+      }
+    }
+  }
+}
+
+// Coloana din dreapta (Despre mine, Informații Cont)
+.profile-main-content {
+  padding: 2rem 1.5rem;
+
+  @media (min-width: 768px) { // md breakpoint
+    width: 66.6667%; // Două treimi din lățime
+    padding: 2.5rem;
+  }
+
+  .profile-section {
+    margin-bottom: 2rem;
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: $primary-text-color;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid $border-color;
+    }
+
+    .section-content {
+      font-size: 1rem;
+      color: $secondary-text-color;
+      line-height: 1.6;
+
+      p {
+        margin-bottom: 0.75rem;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        li {
+          padding: 0.5rem 0;
+          border-bottom: 1px dashed lighten($border-color, 5%);
+          &:last-child {
+            border-bottom: none;
+          }
+          strong {
+            color: $primary-text-color;
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Stil pentru un eventual buton de editare
+.edit-profile-button {
+  background-color: $accent-color;
+  color: $white-bg;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: darken($accent-color, 10%);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba($accent-color, 0.5);
+  }
+}
