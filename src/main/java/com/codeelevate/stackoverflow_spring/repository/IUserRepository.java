@@ -19,9 +19,13 @@ public interface IUserRepository extends CrudRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);
 
+
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.reputation = :newReputation WHERE u.id = :userId")
     double updateUserReputation(@Param("userId") Integer userId, @Param("newReputation") Double newReputation);
+
+
+
 
 }

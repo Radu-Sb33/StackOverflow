@@ -89,4 +89,23 @@ public class UserController {
     }
 
 
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> checkEmailExists(@RequestParam String email) {
+        System.out.println("Received email: " + email);
+        boolean exists = userService.emailExists(email);
+        System.out.println("Email exists: " + exists);
+        System.out.println("ResponseEntity: " + ResponseEntity.ok(exists));
+        return ResponseEntity.ok(exists);
+    }
+
+    @GetMapping("/check-username")
+    public ResponseEntity<Boolean> checkUsernameExists(@RequestParam String username) {
+        boolean exists = userService.usernameExists(username);
+        return ResponseEntity.ok(exists);
+    }
+
+
+
+
+
 }

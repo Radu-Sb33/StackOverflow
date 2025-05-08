@@ -78,15 +78,15 @@ export class UserService {
     return this.http.delete<void>(`${this.baseUrl}/deleteById/${userID}`);
   }
 
-  public checkEmailExists(email: string | undefined): Observable<boolean> {
-    if (!email) {
-      return of(false);
-    }
-
-    return this.http.get<User[]>(`${this.baseUrl}/get/byEmail/${email}`).pipe(
-      map((users) => users.length > 0), // Check if any users exist with the given email
-      catchError(() => of(false))
-    );
+  checkEmailExists(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseUrl}/check-email?email=${email}`);
   }
+
+  checkUsernameExists(username: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseUrl}/check-username?username=${username}`);
+  }
+
+
+
 
 }
