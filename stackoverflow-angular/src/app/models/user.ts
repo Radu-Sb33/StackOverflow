@@ -10,5 +10,5 @@ export interface User {
   reputation: number;
   is_banned: boolean;
   img: string;
-  creation_date: Timestamp<any>;
+  creation_date: Date;
 }
