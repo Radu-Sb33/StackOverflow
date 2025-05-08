@@ -45,8 +45,9 @@ public class UserService {
         if (userRepository.findById(id).isPresent()) {
             return userRepository.findById(id);
         }
-        else
+        else {
             return Optional.empty();
+        }
     }
 
     public User getById(Integer id) {
@@ -158,5 +159,23 @@ public class UserService {
 //    public void banUser(User user){
 //        if(!user.getModerator() && )
 //    }
+    public boolean emailExists(String email) {
+        System.out.println("email"+email);
+        for (User user : getAllUsers()) {
+            if (email != null && email.equalsIgnoreCase(safeTrim(user.getEmail()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String safeTrim(String value) {
+        return value == null ? "" : value.trim().toLowerCase();
+    }
+
+
+    public boolean usernameExists(String username) {
+        return !userRepository.findByUsername(username).isEmpty();
+    }
 
 }
