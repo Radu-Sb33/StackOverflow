@@ -9,13 +9,14 @@ import {AddQuestionComponent} from "./add-comp/add-question/add-question.compone
 import {HomeComponent} from "./home/home.component";
 import {AddAnswerComponent} from "./add-comp/add-answer/add-answer.component";
 import {UserProfileComponent} from "./user-profile/user-profile.component";
+import {ModeratorGuard} from "./auth-comp/auth/moderator.guard";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'questions', component: QuestionComponent},
   { path: 'answers', component: AnswersComponent},
-  { path: 'users', component: UsersComponent},
+  { path: 'users', component: UsersComponent, canActivate: [ModeratorGuard] },
   { path: 'add-question', component: AddQuestionComponent},
   { path: 'add-answer', component: AddAnswerComponent},
   {path: 'home', component: HomeComponent },

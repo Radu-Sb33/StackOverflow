@@ -29,6 +29,7 @@ import { User } from './models/user'; // Asigură-te că modelul User este corec
 export class AppComponent implements OnInit, OnDestroy {
   items: MenuItem[] | undefined;
   title = 'stackoverflow-angular';
+  initial: string | undefined = '';
   currentUser: User | null = null;
   private userSubscription: Subscription | undefined;
 
@@ -81,6 +82,8 @@ export class AppComponent implements OnInit, OnDestroy {
   loadCurrentUser(): void {
     if (this.userService.isAuthenticated) { // Folosim booleanul direct
       const userEmail = localStorage.getItem('emailLogged');
+      this.initial = this.currentUser?.username.charAt(0).toUpperCase();
+      console.log('Initial',this.initial);
       if (userEmail) {
         if (this.userSubscription) {
           this.userSubscription.unsubscribe();
@@ -136,6 +139,7 @@ export class AppComponent implements OnInit, OnDestroy {
   handleLogout(): void {
     this.userService.logout(); // Serviciul se ocupă de logica de logout și navigare
     this.currentUser = null;   // Curăță datele utilizatorului din componentă
+    this.initial='';
     this.loadMenuItems();      // Reîncarcă itemii meniului
   }
 

@@ -38,35 +38,30 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         next: (userData) => {
           this.user = userData;
 
-          if (this.user && this.user.creation_date && typeof (this.user.creation_date as Timestamp<any>).timestamp === 'number') {
+          if (this.user) {
             const { creation_date, ...otherProps } = this.user;
             this.displayableUser = {
               ...otherProps,
-              creation_date_for_display: new Date((creation_date as Timestamp<any>).timestamp)
-            };
-          } else if (this.user) {
-            console.warn('User creation_date is not in the expected RxJS Timestamp format or is missing the timestamp property.');
-            const { creation_date, ...otherProps } = this.user; // Excludem creation_date original
-            this.displayableUser = {
-              ...otherProps,
-              creation_date_for_display: new Date() // Sau o valoare default/null
+              creation_date_for_display: creation_date // direct ca Date
             };
           }
+
           this.isLoading = false;
         },
         error: (err) => {
           console.error('Error fetching user profile data:', err);
-          this.errorMessage = 'Could not load profile data. Please try again later.'; // Tradus
+          this.errorMessage = 'Could not load profile data. Please try again later.';
           this.isLoading = false;
         }
       });
     } else {
       console.error('User email not found in localStorage.');
-      this.errorMessage = 'An error occurred while identifying the user.'; // Tradus
+      this.errorMessage = 'An error occurred while identifying the user.';
       this.isLoading = false;
       this.router.navigate(['/login']);
     }
   }
+
 
   ngOnDestroy(): void {
     if (this.userSubscription) {

@@ -43,6 +43,7 @@ public class User {
     @Column(name="about")
     private String about;
 
+    @JsonProperty("is_moderator")
     @Column(name="is_moderator")
     private Boolean isModerator;
 
@@ -51,6 +52,7 @@ public class User {
     @Column(name="reputation")
     private Double reputation;
 
+    @JsonProperty("is_banned")
     @Column(name="is_banned")
     private Boolean isBanned;
 
@@ -97,7 +99,7 @@ public class User {
     }
 
     public Boolean getModerator() {
-        return isModerator;
+        return this.isModerator;
     }
 
     public Boolean getBanned() {
@@ -106,7 +108,7 @@ public class User {
 
     public void setModerator(Boolean moderator) {
         if(moderator==null){return;}
-        isModerator = moderator;
+        this.isModerator = moderator;
     }
 
     public void setBanned(Boolean banned) {
@@ -234,6 +236,7 @@ public class User {
                 ", id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", moderator= " + isModerator +
                 ", reputation=" + reputation +
                 ", img='" + img + '\'' +
                 ", creationDate=" + creationDate +

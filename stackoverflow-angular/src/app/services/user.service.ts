@@ -28,6 +28,9 @@ export class UserService {
     // 1. Șterge token-ul din localStorage
     localStorage.removeItem('authToken'); // Folosește aceeași cheie ca la login
     localStorage.removeItem('emailLogged');// Apelează funcția de logout din service
+    localStorage.removeItem('idParinte'); // Folosește aceeași cheie ca la login
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
     // 2. Actualizează starea de autentificare
     this.isAuthenticated = false;
 
@@ -84,6 +87,22 @@ export class UserService {
   checkUsernameExists(username: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.baseUrl}/check-username?username=${username}`);
   }
+
+  getUserRoleByEmail(email: string): Observable<string> {
+    return this.http.get<User>(`${this.baseUrl}/get/byEmail/${email}`)
+      .pipe(map(user => user.is_moderator ? 'moderator' : 'user'));
+  }
+
+  banUser(userId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/ban-user/${userId}`, {});
+  }
+
+  unbanUser(userId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/unban-user/${userId}`, {});
+  }
+
+
+
 
 
 

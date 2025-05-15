@@ -80,13 +80,31 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-        boolean isAuthenticated = userService.authenticateUser(user.getEmail(), user.getPassword());
-        if (isAuthenticated) {
-            return ResponseEntity.ok(Map.of("message", "Login successful!"));
-        } else {
+        // Găsește utilizatorul după email
+        Optional<User> optionalUser = userService.findUserByEmail(user.getEmail());
+
+        if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid email or password."));
         }
+
+        User authenticatedUser = optionalUser.get();
+
+        // Verifică parola
+        boolean isAuthenticated = userService.authenticateUser(authenticatedUser.getEmail(), user.getPassword());
+
+        if (!isAuthenticated) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid email or password."));
+        }
+
+        // ✅ Verificare dacă user-ul este banat
+        if (authenticatedUser.getBanned()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied: You are banned."));
+        }
+
+        // ✅ Login reușit
+        return ResponseEntity.ok(Map.of("message", "Login successful!"));
     }
+
 
 
     @GetMapping("/check-email")
@@ -103,6 +121,21 @@ public class UserController {
         boolean exists = userService.usernameExists(username);
         return ResponseEntity.ok(exists);
     }
+
+    @PostMapping("/ban-user/{userId}")
+    @ResponseBody
+    public ResponseEntity<?> banUser(@PathVariable Integer userId) {
+        userService.banUser(userId);
+        return ResponseEntity.ok(Map.of("message", "User banned successfully"));
+    }
+
+    @PostMapping("/unban-user/{userId}")
+    @ResponseBody
+    public ResponseEntity<?> unbanUser(@PathVariable Integer userId) {
+        userService.unbanUser(userId);
+        return ResponseEntity.ok(Map.of("message", "User unbanned successfully"));
+    }
+
 
 
 

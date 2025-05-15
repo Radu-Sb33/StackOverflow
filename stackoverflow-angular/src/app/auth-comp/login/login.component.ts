@@ -58,6 +58,10 @@ export class LoginComponent {
         this.userService.isAuthenticated = true;
         // Store the token or user info in local storage or session storage
         const userId = this.userService.getUserIDbyEmail(email); // Extract the user ID
+        this.userService.getUserRoleByEmail(email).subscribe((role: string) => {
+          localStorage.setItem('userRole', role); // Setează rolul
+        });
+
         //localStorage.setItem('userId', userId.toString());
         localStorage.setItem('userId', userId.toString());
         localStorage.setItem('emailLogged', email);
@@ -68,9 +72,14 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Login failed:', err);
-        // Display an error message to the user
-        alert('Invalid credentials. Please try again.');
+
+        if (err.status === 403 || err.error?.message?.includes('banned')) {
+          alert('You have been banned from the platform.');
+        } else {
+          alert('Invalid credentials. Please try again.');
+        }
       }
+
     });
   }
 
