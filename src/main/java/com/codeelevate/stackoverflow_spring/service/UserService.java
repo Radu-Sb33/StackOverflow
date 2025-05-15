@@ -32,6 +32,9 @@ public class UserService {
     @Autowired
     ITagRepository tagRepository;
 
+    @Autowired
+    EmailSendingService emailSending;
+
     public User createUser(User user) {
         user.setPassword(PasswordEncryptionUtil.hashPassword(user.getPassword()));
         return userRepository.save(user);
@@ -60,13 +63,15 @@ public class UserService {
     }
 
     public User updateUser(Integer id, User userDetails) {
+        System.out.println(userDetails);
         return userRepository.findById(id).map(user -> {
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
             //user.setPassword(PasswordEncryptionUtil.hashPassword(userDetails.getPassword()));
             user.setAbout(userDetails.getAbout());
-            //user.setModerator(userDetails.getModerator()); //se face din admin
+            System.out.println(userDetails.getModerator());
+            user.setModerator(userDetails.getModerator()); //se face din admin
 //            user.setReputation(userDetails.getReputation());
             //user.setBanned(userDetails.getBanned()); //se face din admin
             user.setImg(userDetails.getImg());
@@ -156,9 +161,6 @@ public class UserService {
         return PasswordEncryptionUtil.verifyPassword(password, user.getPassword());
     }
 
-//    public void banUser(User user){
-//        if(!user.getModerator() && )
-//    }
     public boolean emailExists(String email) {
         System.out.println("email"+email);
         for (User user : getAllUsers()) {
@@ -176,6 +178,24 @@ public class UserService {
 
     public boolean usernameExists(String username) {
         return !userRepository.findByUsername(username).isEmpty();
+    }
+
+    public void banUser(Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setBanned(true);
+        userRepository.save(user);
+
+        //emailSending.sendSimpleMail(emailDetails);
+        emailSending.sendBanNotification(user.getEmail(), user.getUsername());
+
+    }
+
+
+    public void unbanUser(Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setBanned(false);
+        emailSending.sendUnbanNotification(user.getEmail(), user.getUsername());
+        userRepository.save(user);
     }
 
 }

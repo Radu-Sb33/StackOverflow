@@ -30,7 +30,7 @@ import {Tag} from "primeng/tag";
 export class UsersComponent implements OnInit{
   // user: User = { email: '', password: '', confirm_password: '' };
   // message: string = '';
-  public userRole: string = 'moderator'; // Rolul utilizatorului curent (înlocuiește cu logica reală de autentificare)
+  //public userRole: string = 'moderator'; // Rolul utilizatorului curent (înlocuiește cu logica reală de autentificare)
 
 
 
@@ -53,19 +53,31 @@ export class UsersComponent implements OnInit{
       }
     );
   }
-  // register() {
-  //   this.userService.register(this.user).subscribe({
-  //     next: (response) => {
-  //       this.message = 'User registered successfully!';
-  //     },
-  //     error: (err) => {
-  //       this.message = 'Error registering user!';
-  //     },
-  //   });
-  // }
+
+  public banUser(userId: number): void {
+    this.userService.banUser(userId).subscribe({
+      next: () => {
+        alert('User has been banned.');
+        //this.getUsers(); // reîncarcă lista de utilizatori
+
+      },
+      error: (error: HttpErrorResponse) => {
+        alert("Failed to ban user: " + error.message);
+      }
+    });
+  }
+
+  public unbanUser(userId: number): void {
+    this.userService.unbanUser(userId).subscribe({
+      next: () => {
+        alert('User has been unbanned.');
+        this.getUsers();
+      },
+      error: (error: HttpErrorResponse) => {
+        alert("Failed to unban user: " + error.message);
+      }
+    });
+  }
 
 
-  // public banUser(user: ) {
-  //
-  // }
 }

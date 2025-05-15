@@ -102,6 +102,27 @@ insert into vote_type values
 
 INSERT INTO `user` (`id`, `username`, `email`, `password`, `about`, `is_moderator`, `reputation`, `is_banned`, `img`, `creation_date`)
 VALUES (-1, 'Anonymous', 'anonymous@example.com', '', '', FALSE, 0, FALSE, '', NOW());
+INSERT INTO `user` (
+    `username`,
+    `email`,
+    `password`,
+    `about`,
+    `is_moderator`,
+    `reputation`,
+    `is_banned`,
+    `img`,
+    `creation_date`
+) VALUES (
+             'admin',
+             'radu@admin.com',
+             'stack1234', -- Replace with a securely hashed password
+             'Administrator account with full privileges.',
+             TRUE,
+             0,
+             FALSE,
+             'admin_avatar.png',
+             NOW()
+         );
 
 DELIMITER $$
 
