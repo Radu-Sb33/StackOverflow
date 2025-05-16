@@ -1,0 +1,46 @@
+<!-- Formular stilizat cu etichete deasupra -->
+<div class="add-tag-form" *ngIf="currentUser">
+  <div class="form-field">
+    <p-floatLabel>
+      <input id="tagName" type="text" pInputText [(ngModel)]="newTag.tagName" />
+      <label for="tagName">Tag Name</label>
+    </p-floatLabel>
+  </div>
+
+  <div class="form-field">
+    <p-floatLabel>
+    <textarea id="tagDescription"
+              pInputTextarea
+              [(ngModel)]="newTag.tagDescription"
+              rows="4"
+              placeholder=""
+              class="custom-textarea"></textarea>
+      <label for="tagDescription">Description</label>
+    </p-floatLabel>
+  </div>
+
+
+  <div class="form-button">
+    <p-button
+      label="Add Tag"
+      icon="pi pi-check"
+      (onClick)="onAddTag()"
+      [disabled]="!newTag.tagName || !newTag.tagDescription"
+      [loading]="loading">
+    </p-button>
+  </div>
+</div>
+
+
+<!-- Presupunem că .tag-grid este un copil direct al body sau al unui wrapper simplu -->
+<div class="tag-grid">
+  <div *ngFor="let tag of tags" class="tag-card"> <!-- Am eliminat 'green-border' dacă e deja în .tag-card -->
+    <div class="tag-name-box" [style.backgroundColor]="tag.color">
+      {{ tag.tagName }}
+    </div>
+    <p class="tag-description">{{ tag.tagDescription }}</p>
+    <div class="tag-footer">
+      <span>👤 {{ tag.createdByUsername }}</span>
+    </div>
+  </div>
+</div>

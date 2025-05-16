@@ -30,6 +30,7 @@ describe('HomeComponent', () => {
   });
 
   it('should create', () => {
+    // @ts-ignore
     expect(component).toBeTruthy();
   });
 

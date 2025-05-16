@@ -33,10 +33,18 @@ export class UserService {
     localStorage.removeItem('userId');
     // 2. Actualizează starea de autentificare
     this.isAuthenticated = false;
-
-
-
+    this.clearSession();
     this.router.navigate(['/login']);
+  }
+
+  public clearSession(): void {
+    // console.log('Clearing session data from localStorage for refresh.'); // Opțional, pentru debugging
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('emailLogged');
+    localStorage.removeItem('idParinte');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
+    this.isAuthenticated = false;
   }
 
   public getUsers(): Observable<User[]>{
@@ -101,7 +109,13 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/unban-user/${userId}`, {});
   }
 
-
+  public getCurrentUser(): Observable<User | null> {
+    const email = localStorage.getItem('emailLogged');
+    if (!email) {
+      return of(null); // dacă nu e email, întoarce null ca observable
+    }
+    return this.getUserByEmail(email);
+  }
 
 
 

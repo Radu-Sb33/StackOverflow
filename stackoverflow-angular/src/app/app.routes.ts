@@ -10,6 +10,7 @@ import {HomeComponent} from "./home/home.component";
 import {AddAnswerComponent} from "./add-comp/add-answer/add-answer.component";
 import {UserProfileComponent} from "./user-profile/user-profile.component";
 import {ModeratorGuard} from "./auth-comp/auth/moderator.guard";
+import {TagsComponent} from "./tags/tags.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,8 +20,9 @@ export const routes: Routes = [
   { path: 'users', component: UsersComponent, canActivate: [ModeratorGuard] },
   { path: 'add-question', component: AddQuestionComponent},
   { path: 'add-answer', component: AddAnswerComponent},
-  {path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'user-profile', component: UserProfileComponent},
+  { path: 'tags', component: TagsComponent},
   { path: '', redirectTo: 'home', pathMatch: 'full'}
 ];
 

@@ -4,7 +4,7 @@ import { PostService } from '../../services/post.service';
 import { Router } from '@angular/router';
 import {InputText} from "primeng/inputtext";
 import {InputTextarea} from "primeng/inputtextarea";
-import {ButtonDirective} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
 import {NgIf} from "@angular/common";
 import {UserService} from "../../services/user.service";
@@ -13,6 +13,7 @@ import {Question} from "../../models/question";
 import {User} from "../../models/user";
 import {HttpErrorResponse} from "@angular/common/http";
 import {PostType} from "../../models/postType";
+import {FloatLabelModule} from "primeng/floatlabel";
 
 @Component({
   selector: 'app-add-question',
@@ -23,7 +24,9 @@ import {PostType} from "../../models/postType";
     InputTextarea,
     ButtonDirective,
     Ripple,
-    NgIf
+    NgIf,
+    Button,
+    FloatLabelModule
   ],
   templateUrl: './add-question.component.html',
   styleUrl: './add-question.component.scss'

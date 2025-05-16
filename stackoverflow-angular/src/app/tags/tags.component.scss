@@ -1,0 +1,165 @@
+/* Stiluri globale pentru a pregăti centrarea și a preveni scroll-ul */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Previne scroll-ul orizontal la nivel de pagină */
+  font-family: sans-serif; /* Este bine să specifici un font de bază */
+}
+
+body {
+  display: flex;
+  align-items: center;     /* Centrează .tag-grid pe verticală */
+  justify-content: center;  /* Centrează .tag-grid pe orizontală */
+  min-height: 100vh;       /* Asigură că body ocupă cel puțin înălțimea viewport-ului */
+  padding: 1rem;           /* Spațiu în jurul grid-ului față de marginile ecranului */
+  box-sizing: border-box;  /* Include padding-ul în dimensiunea totală a body */
+  background-color: #f0f2f5; /* Un fundal deschis pentru a vedea mai bine centrarea */
+}
+
+/* Containerul pentru carduri */
+.tag-grid {
+  display: grid;
+  /*
+    Coloane responsive:
+    - 'auto-fit': umple spațiul cu câte coloane încap.
+    - 'minmax(min(100%, 280px), 1fr)':
+      - Fiecare coloană are o lățime minimă de 280px SAU 100% dacă spațiul e mai mic de 280px.
+      - '1fr' permite coloanelor să crească pentru a umple spațiul rămas.
+  */
+
+
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+
+
+
+
+
+  gap: 1rem;                 /* Spațiu între carduri (orizontal și vertical) */
+  padding: 1rem;             /* Padding în interiorul grid-ului, între margine și carduri */
+  max-width: 95%;           /* Asigură că grid-ul nu depășește lățimea părintelui */
+  width: 95%;               /* Facem gridul să ocupe spațiul disponibil în body (după padding-ul body-ului) */
+  box-sizing: border-box;    /* Padding-ul grid-ului este inclus în width/max-width */
+  /* Opțional: Puteți adăuga un max-width absolut dacă vreți ca grid-ul să nu devină prea lat
+     pe ecrane foarte mari, de ex. max-width: 1200px;*/
+     justify-content: center// pe body se va ocupa de centrarea orizontală a acestuia.
+}
+
+/* Stilurile cardurilor individuale */
+.tag-card {
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: 2px solid #4CAF50; /* Stilul "green-border" aplicat direct */
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+  box-sizing: border-box;
+  display: flex;            /* Pentru alinierea internă a conținutului cardului */
+  flex-direction: column;   /* Elementele din card vor fi pe coloană */
+  overflow: hidden;         /* Previne conținutul intern să "iasă" și să cauzeze scroll */
+}
+
+.tag-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.tag-name-box {
+  padding: 6px 14px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 700;
+  display: inline-block;    /* Se mulează pe conținut, dar permite max-width */
+  max-width: 100%;          /* Nu va depăși lățimea cardului */
+  min-width: 0;             /* Permite să se micșoreze mai mult dacă e nevoie */
+  text-align: center;
+  font-size: 15px;
+  margin-bottom: 0.8rem;
+  user-select: none;
+  align-self: flex-start;   /* Se aliniază la începutul containerului flex al cardului */
+  overflow-wrap: break-word;/* Împarte cuvintele lungi pentru a preveni overflow-ul orizontal */
+  word-break: break-word;   /* O alternativă mai agresivă dacă overflow-wrap nu e suficient */
+}
+
+.tag-description {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.3;
+  min-height: 30px;         /* O înălțime minimă pentru a menține o oarecare consistență */
+  flex-grow: 1;             /* Permite descrierii să ocupe spațiul vertical disponibil, împingând footer-ul în jos */
+  overflow-wrap: break-word;/* Asigură împărțirea textului lung */
+  word-break: break-word;
+  /* Dacă textul este prea lung și doriți să-l trunchiați cu "..." (necesită înălțime fixă sau limită de linii):
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: auto; Ajustați dacă folosiți line-clamp
+  */
+}
+
+.tag-footer {
+  margin-top: 1rem;         /* Se adaugă după ce .tag-description a ocupat spațiul cu flex-grow */
+  font-size: 0.75rem;
+  color: #666;
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  align-items: center;
+  max-width: 100%;          /* Previne ca footer-ul să depășească cardul */
+  overflow-wrap: break-word;/* Pentru cazul în care username-ul e foarte lung */
+}
+
+.tag-footer span {
+  user-select: text;
+  /* Pentru a trunchia username-uri foarte lungi:
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 100%;
+  */
+
+
+}
+
+.add-tag-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  .form-field {
+    width: 100%;
+  }
+
+  .form-button {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+
+}
+
+.custom-textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #1f1f1f; /* fundal închis ca la input */
+  color: #eee;               /* text deschis */
+  font-size: 1rem;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+
+
+
