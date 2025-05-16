@@ -198,4 +198,8 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username).orElse(null);
+    }
+
 }

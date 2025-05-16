@@ -1,5 +1,6 @@
 package com.codeelevate.stackoverflow_spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 
@@ -30,6 +31,21 @@ public class Tag {
 
     @OneToMany(mappedBy = "tag")
     private List<PostTag> postsTags;
+
+    @Transient
+    @JsonProperty("createdByUsername")
+    private String createdByUsername;
+
+    // getter + setter pentru username (folosit doar la input JSON)
+
+    public String getCreatedByUsername() {
+        return createdByUsername;
+    }
+
+    public void setCreatedByUsername(String createdByUsername) {
+        this.createdByUsername = createdByUsername;
+    }
+
 
 
     public Tag() {
