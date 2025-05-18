@@ -27,6 +27,9 @@ public interface IUserRepository extends CrudRepository<User, Integer> {
 
     Optional<User> findUserByUsername(String username);
 
+    @Query("SELECT u.username FROM User u WHERE u.id = :userId")
+    Optional<String> findUsernameById(@Param("userId") Integer userId);
+
 
 
 

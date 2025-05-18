@@ -1,17 +1,19 @@
 <div class="add-question-form" *ngIf="addQuestionForm">
   <div class="form-header">
-    Create Question
+    Creează Întrebare
   </div>
+
+  <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
 
   <form [formGroup]="addQuestionForm" (ngSubmit)="onSubmit()">
 
     <div class="form-field">
       <p-floatLabel>
         <input id="title" type="text" pInputText formControlName="title" />
-        <label for="title">Title</label>
+        <label for="title">Titlu</label>
       </p-floatLabel>
       <small *ngIf="addQuestionForm.get('title')?.invalid && addQuestionForm.get('title')?.touched" class="p-error">
-        Title is required and must be at least 5 characters.
+        Titlul este obligatoriu și trebuie să aibă minim 5 caractere valide.
       </small>
     </div>
 
@@ -22,19 +24,63 @@
                   formControlName="content"
                   rows="4"
                   class="custom-textarea"></textarea>
-        <label for="content">Content</label>
+        <label for="content">Conținut</label>
       </p-floatLabel>
       <small *ngIf="addQuestionForm.get('content')?.invalid && addQuestionForm.get('content')?.touched" class="p-error">
-        Content is required and must be at least 10 characters.
+        Conținutul este obligatoriu și trebuie să aibă minim 10 caractere valide.
       </small>
+    </div>
+
+    <div class="form-field">
+      <p-floatLabel>
+        <p-autoComplete
+          id="tagInput"
+          formControlName="tagInput"
+          [suggestions]="filteredTags"
+          (completeMethod)="filterTags($event)"
+          (onSelect)="onTagSelect($event)"
+          (onClear)="onTagClear()"
+          field="tagName"
+          placeholder="Caută sau introdu un tag nou"
+          [forceSelection]="false"
+          styleClass="w-full">
+        </p-autoComplete>
+        <label for="tagInput">Tag (Opțional)</label>
+      </p-floatLabel>
+      <small *ngIf="showCreateTagPrompt"
+             class="clickable-text p-info" (click)="prepareCreateTag()">
+        Tag-ul '{{ currentTagInputValueForDisplay }}' nu a fost găsit. Click aici pentru a-l crea.
+      </small>
+    </div>
+
+    <div *ngIf="showCreateTagInline" class="inline-create-tag">
+      <h5>Creează Tag Nou: '{{ newTagFromAutoComplete }}'</h5>
+      <div class="form-field">
+        <p-floatLabel>
+          <textarea id="newTagDescription"
+                    pInputTextarea
+                    formControlName="newTagDescriptionCtrl"
+                    rows="2"
+                    class="custom-textarea"
+                    placeholder="Introdu descrierea pentru '{{ newTagFromAutoComplete }}'"></textarea>
+          <label for="newTagDescription">Descriere Tag</label>
+        </p-floatLabel>
+        <small *ngIf="addQuestionForm.get('newTagDescriptionCtrl')?.invalid && addQuestionForm.get('newTagDescriptionCtrl')?.touched" class="p-error">
+          Descrierea este obligatorie și trebuie să aibă minim 5 caractere valide.
+        </small>
+      </div>
+      <div class="inline-create-tag-actions">
+        <p-button label="Anulează" icon="pi pi-times" styleClass="p-button-text p-button-sm" (click)="cancelCreateTag()"></p-button>
+        <p-button label="Salvează Tag" icon="pi pi-save" styleClass="p-button-sm" (click)="confirmCreateTag()" [loading]="tagCreationLoading"></p-button>
+      </div>
     </div>
 
     <div class="form-button">
       <p-button
-        label="Submit"
+        label="Trimite Întrebarea"
         icon="pi pi-check"
         type="submit"
-        [disabled]="addQuestionForm.invalid">
+        [disabled]="addQuestionForm.get('title')?.invalid || addQuestionForm.get('content')?.invalid || !postType || tagCreationLoading || (showCreateTagInline && addQuestionForm.get('newTagDescriptionCtrl')?.invalid)">
       </p-button>
     </div>
   </form>

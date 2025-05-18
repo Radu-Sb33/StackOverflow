@@ -202,4 +202,9 @@ public class UserService {
         return userRepository.findUserByUsername(username).orElse(null);
     }
 
+    public Optional<String> findUsernameById(Integer userId) {
+        return userRepository.findUsernameById(userId);
+    }
+
+
 }

@@ -19,7 +19,7 @@ export class TagService {
     return this.http.get<Tag[]>(`${this.baseUrl}/getAllTags`);
   }
 
-  createTag(tag: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/createTag`, tag);
+  createTag(tag: Partial<Tag>): Observable<Tag> { // Specificăm tipul pentru payload și răspuns
+    return this.http.post<Tag>(`${this.baseUrl}/createTag`, tag);
   }
 }

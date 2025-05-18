@@ -1,12 +1,14 @@
 .add-question-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  gap: 1.5rem; // Spațiul între elementele flex
+  max-width: 500px; // Lățime maximă
+  margin: 2rem auto; // Centrare
+  padding: 1.5rem; // Padding interior
+  border-radius: 12px; // Colțuri rotunjite
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); // Umbră mai vizibilă
+  background-color: #2c2c2c; // Fundal întunecat pentru întregul formular
+  color: #f0f0f0; // Culoare text deschisă pentru lizibilitate
 
   .form-header {
     font-size: 1.8rem;
@@ -21,55 +23,163 @@
 
   .form-field {
     width: 100%;
+    // margin-bottom: 1.5rem; // Gap-ul din .add-question-form gestionează spațierea
   }
 
   .form-button {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end; // Aliniere buton la dreapta
+    margin-top: 0.5rem; // Mic spațiu suplimentar dacă e necesar
   }
 }
 
-.custom-textarea {
-  width: 100%;
-  min-height: 150px;
-  resize: vertical;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: #1f1f1f;
-  color: #eee;
-  font-size: 1.1rem;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
+// Stiluri pentru p-floatLabel și input-urile din interior
 p-floatLabel {
   width: 100%;
-  margin-bottom: 1.5rem;
+  // margin-bottom: 1.5rem; // Gestionat de gap-ul containerului .add-question-form
 
   input[pInputText],
   textarea[pInputTextarea] {
-    font-size: 1.25rem;
-    padding: 1rem 0.75rem;
-    border-radius: 8px;
-    height: auto;
-    background-color: #1f1f1f;
-    color: #eee;
-    border: 1px solid #444;
+    width: 100%; // Asigură lățime completă
+    font-size: 1rem; // Mărime font input
+    padding: 0.875rem 0.75rem; // Padding input
+    border-radius: 8px; // Colțuri rotunjite input
+    background-color: #1f1f1f; // Fundal input
+    color: #eee; // Culoare text input
+    border: 1px solid #444; // Culoare bordură input
+
+    &:focus {
+      border-color: #2ecc71; // Culoare bordură la focus
+      box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25); // Umbră la focus
+    }
   }
 
-  textarea[pInputTextarea] {
-    min-height: 150px;
-  }
-
+  // Label-ul din p-floatLabel
   label {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #27ae60; /* verde intens pentru label */
+    font-size: 1rem; // Mărime font label
+    font-weight: normal; // Greutate font label
+    color: #999; // Culoare label când e placeholder
+  }
+
+  // Când inputul are valoare sau focus, labelul se mișcă în sus
+  &.p-floatlabel-float label {
+    color: #27ae60; // Culoare label activat
+    font-size: 0.85rem; // Mărime font label activat
   }
 }
 
+
+// Stil specific pentru textarea, dacă este necesar (custom-textarea este deja folosit)
+.custom-textarea {
+  width: 100%;
+  min-height: 120px; // Înălțime minimă
+  resize: vertical; // Permite redimensionare verticală
+  // Alte stiluri sunt deja moștenite de la textarea[pInputTextarea]
+}
+
+// Stiluri pentru mesaje de eroare sub câmpuri
+.p-error {
+  display: block; // Asigură că ocupă lățimea
+  font-size: 0.875rem; // Mărime font eroare
+  color: #e74c3c; // Culoare roșie pentru erori
+  margin-top: 0.25rem; // Spațiu deasupra mesajului de eroare
+}
+.p-info { // Pentru mesaje informative
+  display: block;
+  font-size: 0.875rem;
+  color: #3498db; // Albastru pentru info
+  margin-top: 0.25rem;
+}
+
+
+// Stiluri pentru p-button
 button[pButton] {
-  font-size: 1.2rem;
-  padding: 0.75rem 2rem;
+  font-size: 1rem; // Mărime font buton
+  padding: 0.75rem 1.5rem; // Padding buton
+  border-radius: 8px; // Colțuri rotunjite buton
+  // PrimeNG gestionează culorile de bază, dar le poți suprascrie
+  // background-color: #2ecc71;
+  // border-color: #27ae60;
+
+  // &:hover {
+  //   background-color: #27ae60;
+  //   border-color: #27ae60;
+  // }
+}
+
+// Stiluri noi pentru secțiunea de tag-uri
+.clickable-text {
+  cursor: pointer;
+  // color: var(--primary-color, #3498db); // Folosește variabila temei PrimeNG sau o culoare specifică
+  text-decoration: underline;
+  // font-size: 0.875rem; // Deja setat prin .p-info
+
+  &:hover {
+    color: var(--primary-darker-color, #2980b9);
+  }
+}
+
+.inline-create-tag {
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 1px solid #444; // Bordură subtilă
   border-radius: 8px;
+  background-color: #333; // Un fundal ușor diferit pentru a distinge
+
+  h5 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #2ecc71; // Culoare titlu secțiune
+  }
+
+  .form-field { // Spațiere specifică în interiorul acestui bloc
+    margin-bottom: 1rem;
+  }
+}
+
+.inline-create-tag-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  gap: 0.5rem; // Spațiu între butoane folosind gap
+
+  .p-button-text { // Ajustare specifică pentru butoanele text
+    color: #ccc;
+    &:hover {
+      background-color: rgba(204, 204, 204, 0.1); // Hover subtil
+    }
+  }
+}
+
+// Stil pentru p-autocomplete și input-ul său, dacă este necesar
+:host ::ng-deep .p-autocomplete-input { // :host și ::ng-deep pentru a stiliza componentele PrimeNG
+  font-size: 1rem !important;
+  padding: 0.875rem 0.75rem !important;
+  background-color: #1f1f1f !important;
+  color: #eee !important;
+  border: 1px solid #444 !important;
+  border-radius: 8px !important;
+  width: 100% !important; // Asigură lățimea completă
+}
+
+:host ::ng-deep .p-autocomplete-panel {
+  background-color: #333 !important;
+  border: 1px solid #444 !important;
+  color: #eee !important;
+
+  .p-autocomplete-item {
+    &:hover {
+      background-color: #444 !important;
+    }
+    &.p-highlight { // Elementul selectat
+      background-color: #2ecc71 !important;
+      color: #1f1f1f !important;
+    }
+  }
+}
+
+// Asigură-te că .w-full este definit dacă nu folosești PrimeFlex
+.w-full {
+  width: 100% !important;
 }

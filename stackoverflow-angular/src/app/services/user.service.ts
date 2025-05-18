@@ -117,8 +117,11 @@ export class UserService {
     return this.getUserByEmail(email);
   }
 
-
-
-
+  public getUsernameById(userId: number): Observable<string> {
+    return this.http.get<{username: string}>(`${this.baseUrl}/getUsernameById/${userId}`)
+      .pipe(
+        map(response => response.username)
+      );
+  }
 
 }

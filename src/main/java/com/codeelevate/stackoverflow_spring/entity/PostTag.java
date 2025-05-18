@@ -3,9 +3,11 @@ package com.codeelevate.stackoverflow_spring.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import serializer.PostIdSerializer;
 
 @Entity
 @Table(name = "post_tag")
@@ -21,13 +23,14 @@ public class PostTag {
 
 //    @Getter
 //    @Setter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
+    @JsonSerialize(using = PostIdSerializer.class)
     private Post post;
 
 //    @Getter
 //    @Setter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 

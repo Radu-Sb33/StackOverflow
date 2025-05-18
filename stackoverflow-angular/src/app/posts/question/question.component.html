@@ -6,8 +6,19 @@
     <h3>{{ question.postTitleQ }}</h3>
     <p>{{ question.postContent }}</p>
 
-    <p id="asked" class="bck">  <strong>Asked by:</strong> {{ question.createdByUser.username }}</p>
-    <p id="asked" class="bck"><strong>Posted on:</strong> {{ question.postedDate | date }}</p>
+    <p id="asked" class="bck">
+      <strong>Asked by:</strong>
+      <span *ngIf="question.createdByUsername; else unknownUser">
+    {{ question.createdByUsername }}
+  </span>
+      <ng-template #unknownUser>Unknown</ng-template>
+    </p>
+
+
+    <p id="posted-on" class="bck">
+      <strong>Posted on:</strong>
+      {{ question.postedDate ? (question.postedDate | date) : 'Unknown' }}
+    </p>
     <div *ngIf="isAuthenticated" class="add-answer-button">
       <button pButton pRipple label="Add Answer" icon="pi pi-plus" (click)="navigateToAddAnswer(question.id)"></button>
     </div>
@@ -15,8 +26,19 @@
       <h4>Answers:</h4>
       <div *ngFor="let answer of question.answers" class="answer-card">
         <p>{{ answer.postContent }}</p>
-        <p><strong>Answered by:</strong> {{ answer.createdByUser.username }}</p>
-        <p><strong>Posted on:</strong> {{ answer.postedDate | date }}</p>
+        <p id="asked" class="bck">
+          <strong>Answered by:</strong>
+          <span *ngIf="answer.createdByUsername; else unknownUser">
+    {{ answer.createdByUsername }}
+  </span>
+          <ng-template #unknownUser>Unknown</ng-template>
+        </p>
+
+
+        <p id="posted-on" class="bck">
+          <strong>Posted on:</strong>
+          {{ answer.postedDate ? (answer.postedDate | date) : 'Unknown' }}
+        </p>
       </div>
     </div>
   </div>
