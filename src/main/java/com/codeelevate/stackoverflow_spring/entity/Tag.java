@@ -1,7 +1,11 @@
 package com.codeelevate.stackoverflow_spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
+import serializer.PostTagSerializer;
 
 
 import java.util.ArrayList;
@@ -9,6 +13,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "tag")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        scope = Tag.class)
 public class Tag {
 
     @Id
@@ -28,7 +36,7 @@ public class Tag {
     @JoinColumn(name = "created_by_user_id", nullable = false)
     private User createdByUser;
 
-
+    @JsonSerialize(contentUsing = PostTagSerializer.class)
     @OneToMany(mappedBy = "tag")
     private List<PostTag> postsTags;
 

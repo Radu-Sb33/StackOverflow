@@ -49,4 +49,8 @@ public class TagService {
                 .toList();
     }
 
+    public String getTagNameById(Integer id) {
+        return tagRepository.findTagNameById(id);
+    }
+
 }

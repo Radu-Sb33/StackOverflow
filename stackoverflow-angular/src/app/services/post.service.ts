@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from "../models/user";
@@ -36,8 +36,17 @@ export class PostService {
       .pipe(catchError(this.handleError));
   }
 
-  getAnswersForQuestion(questionId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/questions/${questionId}/answers`);
+  getAnswersForQuestion(questionId: number): Observable<Answer[]> {
+    return this.http.get<Answer[]>(`${this.baseUrl}/questions/${questionId}/answers`);
+  }
+
+  updatePost(id: number, post: Partial<Question|Answer>): Observable<Question | Answer> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+
+    return this.http.put<Question | Answer>(`${this.baseUrl}/updatePost/${id}`, post, { headers }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   createPost(question: Partial<Question>): Observable<Question> {
@@ -50,6 +59,14 @@ export class PostService {
     return this.http.post<PostTag>(`${this.generalApiUrl}/postTag/createPostTag`, postTagPayload)
       .pipe(catchError(this.handleError));
 
+  }
+
+  getPostTagsByPostId(postId: number): Observable<PostTag[]> {
+    return this.http.get<PostTag[]>(`${this.generalApiUrl}/postTag/getByPost/${postId}`);
+  }
+
+  getTagNameByTagId(tagId: number): Observable<string>{
+    return this.http.get<string>(`${this.generalApiUrl}/tag/getTagNameById/${tagId}`, {responseType: 'text' as 'json'});
   }
 
   private handleError(error: HttpErrorResponse) {

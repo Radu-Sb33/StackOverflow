@@ -5,14 +5,12 @@ import { Router } from '@angular/router';
 import { InputTextModule } from "primeng/inputtext";
 import { ButtonModule } from "primeng/button";
 import { RippleModule } from "primeng/ripple";
-import { NgIf, NgClass } from "@angular/common";
+import { NgIf, NgClass, NgFor } from "@angular/common"; // Import NgFor
 import { UserService } from "../../services/user.service";
 import { switchMap, map, catchError, tap, finalize, debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs'; // Import forkJoin
 import { Question } from "../../models/question";
 import { User } from "../../models/user";
-// HttpErrorResponse nu mai este necesar direct în componentă dacă serviciul gestionează eroarea
-// import { HttpErrorResponse } from "@angular/common/http";
 import { PostType } from "../../models/postType";
 import { FloatLabelModule } from "primeng/floatlabel";
 import { AutoCompleteModule, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
@@ -22,7 +20,7 @@ import { Message } from 'primeng/api';
 import { TagService } from '../../services/tag.service';
 import { Tag } from '../../models/tag';
 import {PostService} from "../../services/post.service";
-import {Answer} from "../../models/answer";
+import { ChipModule } from 'primeng/chip'; // Import ChipModule
 
 @Component({
   selector: 'app-add-question',
@@ -34,9 +32,11 @@ import {Answer} from "../../models/answer";
     RippleModule,
     NgIf,
     NgClass,
+    NgFor, // Add NgFor here
     FloatLabelModule,
     AutoCompleteModule,
-    MessagesModule
+    MessagesModule,
+    ChipModule // Add ChipModule here
   ],
   templateUrl: './add-question.component.html',
   styleUrl: './add-question.component.scss'
@@ -48,7 +48,7 @@ export class AddQuestionComponent implements OnInit {
 
   allTags: Tag[] = [];
   filteredTags: Tag[] = [];
-  selectedTagForForm: Tag | null = null;
+  selectedTagsForForm: Tag[] = []; // Changed to an array
 
   showCreateTagInline: boolean = false;
   newTagFromAutoComplete: string = '';
@@ -65,8 +65,8 @@ export class AddQuestionComponent implements OnInit {
     this.addQuestionForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
       content: ['', [Validators.required, Validators.minLength(10)]],
-      tagInput: [null],
-      newTagDescriptionCtrl: ['', [Validators.minLength(5)]] // Validatorul 'required' se adaugă dinamic
+      tagInput: [null], // This will temporarily hold the tag selected from autocomplete or the text for a new tag
+      newTagDescriptionCtrl: ['', [Validators.minLength(5)]]
     });
   }
 
@@ -85,20 +85,6 @@ export class AddQuestionComponent implements OnInit {
 
     this.loadTags();
 
-    this.addQuestionForm.get('tagInput')?.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      tap(value => {
-        if (typeof value === 'object' && value !== null) {
-          this.selectedTagForForm = value as Tag;
-          this.showCreateTagInline = false;
-          this.addQuestionForm.get('newTagDescriptionCtrl')?.reset('');
-        } else if (value === null || (typeof value === 'string' && value.trim() === '')) {
-          this.selectedTagForForm = null;
-          this.showCreateTagInline = false;
-        }
-      })
-    ).subscribe();
   }
 
   loadTags(): void {
@@ -113,7 +99,7 @@ export class AddQuestionComponent implements OnInit {
 
   get showCreateTagPrompt(): boolean {
     const controlValue = this.addQuestionForm.get('tagInput')?.value;
-    if (this.selectedTagForForm || this.showCreateTagInline || typeof controlValue !== 'string') {
+    if (this.showCreateTagInline || typeof controlValue !== 'string') {
       return false;
     }
     const trimmedValue = controlValue.trim();
@@ -139,30 +125,45 @@ export class AddQuestionComponent implements OnInit {
       const cleanedQuery = query.trim().toLowerCase();
       if (cleanedQuery) {
         filtered = this.allTags.filter(tag =>
-          tag.tagName.toLowerCase().includes(cleanedQuery)
+          tag.tagName.toLowerCase().includes(cleanedQuery) &&
+          !this.selectedTagsForForm.some(selected => selected.id === tag.id) // Filter out already selected tags
         );
       } else {
-        filtered = [...this.allTags];
+        filtered = this.allTags.filter(tag =>
+          !this.selectedTagsForForm.some(selected => selected.id === tag.id)
+        );
       }
     } else {
-      filtered = [...this.allTags];
+      filtered = this.allTags.filter(tag =>
+        !this.selectedTagsForForm.some(selected => selected.id === tag.id)
+      );
     }
     this.filteredTags = filtered;
   }
 
   onTagSelect(event: AutoCompleteSelectEvent): void {
     if (typeof event.value === 'object' && event.value !== null) {
-      this.selectedTagForForm = event.value as Tag;
+      const selectedTag = event.value as Tag;
+      // Add tag only if not already in selectedTagsForForm
+      if (!this.selectedTagsForForm.some(tag => tag.id === selectedTag.id)) {
+        this.selectedTagsForForm.push(selectedTag);
+      }
       this.showCreateTagInline = false;
       this.addQuestionForm.get('newTagDescriptionCtrl')?.reset('');
-      this.addQuestionForm.get('tagInput')?.setValue(this.selectedTagForForm, { emitEvent: false });
+      this.addQuestionForm.get('tagInput')?.setValue(null); // Clear the input after selection
     }
   }
 
+  removeTag(tagToRemove: Tag): void {
+    this.selectedTagsForForm = this.selectedTagsForForm.filter(tag => tag.id !== tagToRemove.id);
+    this.filterTags({ query: this.addQuestionForm.get('tagInput')?.value || '' } as AutoCompleteCompleteEvent); // Re-filter to potentially show the removed tag again
+  }
+
   onTagClear(): void {
-    this.selectedTagForForm = null;
-    this.showCreateTagInline = false;
-    this.newTagFromAutoComplete = '';
+    // This is for the autocomplete clear button, not needed if we manage tags as chips
+    // this.selectedTagForForm = null;
+    // this.showCreateTagInline = false;
+    // this.newTagFromAutoComplete = '';
   }
 
   prepareCreateTag(): void {
@@ -172,13 +173,17 @@ export class AddQuestionComponent implements OnInit {
       if (tagName !== '') {
         const existingTag = this.allTags.find(t => t.tagName.toLowerCase() === tagName.toLowerCase());
         if (existingTag) {
-          this.selectedTagForForm = existingTag;
-          this.addQuestionForm.get('tagInput')?.setValue(existingTag, { emitEvent: false });
+          // If tag exists and is not already selected, add it to selectedTagsForForm
+          if (!this.selectedTagsForForm.some(tag => tag.id === existingTag.id)) {
+            this.selectedTagsForForm.push(existingTag);
+            this.messages = [{ severity: 'info', summary: 'Tag Selectat', detail: `Tag-ul '${existingTag.tagName}' există deja și a fost adăugat.` }];
+          } else {
+            this.messages = [{ severity: 'info', summary: 'Tag Deja Adăugat', detail: `Tag-ul '${existingTag.tagName}' este deja în listă.` }];
+          }
           this.showCreateTagInline = false;
-          this.messages = [{ severity: 'info', summary: 'Tag Selectat', detail: `Tag-ul '${existingTag.tagName}' există deja și a fost selectat.` }];
+          this.addQuestionForm.get('tagInput')?.setValue(null); // Clear the input
         } else {
           this.newTagFromAutoComplete = tagName;
-          this.selectedTagForForm = null;
           this.showCreateTagInline = true;
           this.addQuestionForm.get('newTagDescriptionCtrl')?.reset('');
           this.addQuestionForm.get('newTagDescriptionCtrl')?.setValidators([Validators.required, Validators.minLength(5)]);
@@ -188,9 +193,6 @@ export class AddQuestionComponent implements OnInit {
         this.messages = [{ severity: 'warn', summary: 'Nume Tag Invalid', detail: 'Numele tag-ului nu poate conține doar spații.' }];
         this.showCreateTagInline = false;
       }
-    } else if (typeof currentTagInputValue === 'object' && currentTagInputValue !== null) {
-      this.selectedTagForForm = currentTagInputValue as Tag; // Dacă e deja un obiect Tag (ex: selectat și apoi text șters parțial)
-      this.showCreateTagInline = false;
     } else {
       this.messages = [{ severity: 'warn', summary: 'Nume Tag Necesar', detail: 'Te rog, introdu un nume pentru tag.' }];
       this.showCreateTagInline = false;
@@ -215,7 +217,6 @@ export class AddQuestionComponent implements OnInit {
     const descriptionControl = this.addQuestionForm.get('newTagDescriptionCtrl');
     const descriptionValue = descriptionControl?.value ? String(descriptionControl.value).trim() : '';
 
-    // Verifică dacă controlul este invalid SAU dacă are validatorul 'required' și valoarea după trim este goală
     if (descriptionControl?.invalid || (descriptionControl?.hasValidator(Validators.required) && descriptionValue === '')) {
       this.messages = [{ severity: 'warn', summary: 'Validare', detail: 'Descrierea tag-ului este obligatorie și trebuie să aibă minim 5 caractere valide.' }];
       descriptionControl?.markAsTouched();
@@ -240,10 +241,13 @@ export class AddQuestionComponent implements OnInit {
       next: (createdTag) => {
         this.messages = [{ severity: 'success', summary: 'Succes', detail: `Tag-ul '${createdTag.tagName}' a fost creat.` }];
         this.allTags.push(createdTag);
-        this.selectedTagForForm = createdTag;
-        this.addQuestionForm.get('tagInput')?.setValue(createdTag, { emitEvent: false });
+        // Add the newly created tag to the selected tags
+        if (!this.selectedTagsForForm.some(tag => tag.id === createdTag.id)) {
+          this.selectedTagsForForm.push(createdTag);
+        }
         this.showCreateTagInline = false;
         this.newTagFromAutoComplete = '';
+        this.addQuestionForm.get('tagInput')?.setValue(null); // Clear the input
         descriptionControl?.reset('');
         descriptionControl?.clearValidators();
         descriptionControl?.setValidators([Validators.minLength(5)]);
@@ -342,31 +346,18 @@ export class AddQuestionComponent implements OnInit {
       switchMap((createdQuestion: Question) => {
         const questionId = createdQuestion.id;
 
-        const questionPayload: Question = {
-          id: questionId,
-          createdByUser: this.currentUser,
-          postType: this.postType!,
-          postTitleQ: titleValue,
-          postContent: contentValue,
-          postedDate: this.addQuestionForm.get('postedDate')?.value,
-        };
-
-        console.log('Payload pentru creare întrebare:', questionPayload);
-
         if (!questionId) {
           throw new Error('Nu s-a putut obține ID-ul întrebării create.');
         }
 
-        if (this.selectedTagForForm && this.selectedTagForForm.id && questionId) {
-          const postPayloadForLink: Partial<Question> = {
-            id: questionId
-          };
-
+        // Prepare PostTag creation for all selected tags
+        const tagCreationObservables = this.selectedTagsForForm.map(selectedTag => {
+          const postPayloadForLink: Partial<Question> = { id: questionId };
           const tagPayloadForLink: Partial<Tag> = {
-            id: this.selectedTagForForm.id,
-            tagName: this.selectedTagForForm.tagName,
-            tagDescription: this.selectedTagForForm.tagDescription,
-            createdByUsername: this.selectedTagForForm?.createdByUsername || this.currentUser?.username
+            id: selectedTag.id,
+            tagName: selectedTag.tagName,
+            tagDescription: selectedTag.tagDescription,
+            createdByUsername: selectedTag?.createdByUsername || this.currentUser?.username
           };
 
           const postTagPayload: Partial<PostTag> = {
@@ -374,31 +365,34 @@ export class AddQuestionComponent implements OnInit {
             tag: tagPayloadForLink as Tag
           };
 
-          console.log('Payload NOU pentru creare PostTag:', postTagPayload);
+          console.log('Payload pentru creare PostTag:', postTagPayload);
 
           return this.postService.createPostTag(postTagPayload as PostTag).pipe(
-            map(postTagResponse => ({ createdQuestion, postTagResponse })),
             catchError(postTagError => {
-              console.error('Eroare la crearea PostTag:', postTagError.message);
-              this.messages = [{
+              console.error(`Eroare la crearea PostTag pentru tag-ul '${selectedTag.tagName}':`, postTagError.message);
+              this.messages.push({
                 severity: 'warn',
                 summary: 'Eroare Legare Tag',
-                detail: `Întrebarea a fost creată, dar legarea tag-ului a eșuat: ${postTagError.message || 'Eroare necunoscută'}`
-              }];
-              return of({ createdQuestion, postTagResponse: null });
+                detail: `Întrebarea a fost creată, dar legarea tag-ului '${selectedTag.tagName}' a eșuat: ${postTagError.message || 'Eroare necunoscută'}`
+              });
+              return of(null); // Return null for failed tag associations
             })
           );
-        } else {
-          return of({ createdQuestion, postTagResponse: null });
-        }
+        });
+
+        // Use forkJoin to wait for all tag associations to complete
+        return forkJoin(tagCreationObservables).pipe(
+          map(postTagResponses => ({ createdQuestion, postTagResponses }))
+        );
       })
     ).subscribe({
-      next: ({ createdQuestion, postTagResponse }) => {
+      next: ({ createdQuestion, postTagResponses }) => {
         let successMessage = `Întrebarea '${createdQuestion.postTitleQ}' a fost adăugată cu succes!`;
-        if (postTagResponse && this.selectedTagForForm) {
-          successMessage += ` Tag-ul '${this.selectedTagForForm.tagName}' a fost legat.`;
-        } else if (this.selectedTagForForm) {
-          successMessage += ` Legarea tag-ului '${this.selectedTagForForm.tagName}' a fost omisă sau a eșuat.`;
+        const successfullyLinkedTags = postTagResponses.filter(response => response !== null);
+        if (successfullyLinkedTags.length > 0) {
+          successMessage += ` ${successfullyLinkedTags.length} tag(uri) au fost legate.`;
+        } else if (this.selectedTagsForForm.length > 0) {
+          successMessage += ` Legarea tag-urilor a eșuat parțial sau complet.`;
         }
 
         alert(successMessage); // Recomand: PrimeNG Toast
@@ -416,4 +410,3 @@ export class AddQuestionComponent implements OnInit {
   }
 
 }
-

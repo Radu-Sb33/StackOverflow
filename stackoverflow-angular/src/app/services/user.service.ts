@@ -55,8 +55,11 @@ export class UserService {
     return this.http.get<User>(`${this.baseUrl}/get/byEmail/${email}`)
   }
 
-  public getUserIDbyEmail(email: string): Observable<number>{
-    return this.http.get<number>(`${this.baseUrl}/getUserIdByEmail`);
+  public getUserIDbyEmail(email: string): Observable<{ userId: number }> {
+    return this.http.get<{ userId: number }>(
+      `${this.baseUrl}/getUserIdByEmail`,
+      { params: { email } }          // <= aici se atașează ?email=...
+    );
   }
 
   public register(user: Partial<User>): Observable<User> {

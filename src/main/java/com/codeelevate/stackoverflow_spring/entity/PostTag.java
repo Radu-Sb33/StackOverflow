@@ -13,7 +13,8 @@ import serializer.PostIdSerializer;
 @Table(name = "post_tag")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+        property = "id",
+        scope=PostTag.class)
 public class PostTag {
 
 //    @Getter
@@ -23,14 +24,14 @@ public class PostTag {
 
 //    @Getter
 //    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "post_id", nullable = false)
     @JsonSerialize(using = PostIdSerializer.class)
     private Post post;
 
 //    @Getter
 //    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 

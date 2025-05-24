@@ -113,6 +113,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class PostTagService {
 
@@ -202,4 +204,13 @@ public class PostTagService {
 
         return postTagRepository.save(postTag);
     }
+
+    public List<PostTag> getAllPostTags()
+    {
+        return (List<PostTag>) postTagRepository.findAll();
+    }
+    public List<PostTag> getPostTagsByPostId(Integer postId) {
+        return postTagRepository.findAllByPostId(postId);
+    }
+
 }

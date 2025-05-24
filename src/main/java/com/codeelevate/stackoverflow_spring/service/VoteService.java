@@ -1,5 +1,6 @@
 package com.codeelevate.stackoverflow_spring.service;
 
+import com.codeelevate.stackoverflow_spring.dto.VoteResponseDTO;
 import com.codeelevate.stackoverflow_spring.entity.*;
 import com.codeelevate.stackoverflow_spring.repository.IPostRepository;
 import com.codeelevate.stackoverflow_spring.repository.IUserRepository;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VoteService {
@@ -60,8 +63,87 @@ public class VoteService {
         return voteRepository.save(vote);
     }
 
-    public void deleteVote(Vote v)
+    public void deleteVote(Integer vID)
     {
+        Vote v = voteRepository.findById(vID).orElseThrow(() -> new RuntimeException("Vote not found with id: " + vID));
+        User u = userService.getUserById(v.getVotedByUser().getId()).orElseThrow(() -> new RuntimeException("User not found with id: " + v.getVotedByUser().getId()));
+        u.getVotes().remove(v);
+        Post post = v.getPost();
+        post.getVotes().remove(v);
+        VoteType voteType = v.getVoteType();
+        voteType.getVotes().remove(v);
         voteRepository.delete(v);
     }
+
+    public List<VoteResponseDTO> getVotesForPost(Integer postId) {
+        // 1. Găsește toate entitățile Vote pentru postId specificat
+        List<Vote> votes = voteRepository.findByPostId(postId);
+
+        // 2. Transformă fiecare entitate Vote într-un VoteResponseDTO
+        return votes.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Integer getScoreForQuestion(Integer questionId) {
+        int score=0;
+        List<Vote> votes = voteRepository.findByPostId(questionId);
+        for(Vote vote : votes){
+            if(vote.getVoteType().getId()==1){
+                score+=1;
+            }
+            else{
+                score-=1;
+            }
+        }
+        return score;
+    }
+
+    /**
+     * Metodă helper pentru a converti o entitate Vote într-un VoteResponseDTO.
+     *
+     * @param vote Entitatea Vote de convertit.
+     * @return VoteResponseDTO corespunzător.
+     */
+    private VoteResponseDTO convertToDTO(Vote vote) {
+        if (vote == null) {
+            return null; // Sau aruncă o excepție, în funcție de logica dorită
+        }
+
+        VoteType voteTypeEntity = vote.getVoteType();
+        String category = null;
+        Integer voteTypeId = null;
+
+        if (voteTypeEntity != null) {
+            voteTypeId = voteTypeEntity.getId();
+            // Presupunând că entitatea VoteType are o metodă getVoteType() care returnează string-ul (ex: "upvote")
+            // Acest nume de metodă `getVoteType()` pe obiectul `voteTypeEntity` este bazat pe structura JSON anterioară.
+            // Adaptează dacă numele metodei/câmpului este diferit în clasa ta VoteType.
+            category = voteTypeEntity.getVoteType();
+        }
+
+        // Ne asigurăm că post și votedByUser nu sunt null înainte de a accesa ID-urile,
+        // deși coloanele sunt marcate ca nullable=false în entitatea Vote.
+        Integer actualPostId = (vote.getPost() != null) ? vote.getPost().getId() : null;
+        Integer votedByUserId = (vote.getVotedByUser() != null) ? vote.getVotedByUser().getId() : null;
+
+
+        return new VoteResponseDTO(
+                vote.getId(),
+                voteTypeId,
+                actualPostId, // Ar trebui să fie același cu postId din argumentul metodei getVotesForPost
+                votedByUserId
+        );
+    }
+
+    public VoteResponseDTO getVoteByUserAndPost(Integer userId, Integer postId) {
+        List<Vote> votes = voteRepository.findByPostId(postId);
+        for(Vote vote : votes){
+            if(vote.getVotedByUser().getId().equals(userId)){
+                return convertToDTO(vote);
+            }
+        }
+        return null;
+    }
+
 }

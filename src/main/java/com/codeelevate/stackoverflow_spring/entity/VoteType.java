@@ -1,5 +1,7 @@
 package com.codeelevate.stackoverflow_spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -7,6 +9,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "vote_type")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        scope = VoteType.class)
 public class VoteType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +46,12 @@ public class VoteType {
     }
 
     public void setVoteType(String voteType) {
+        if(voteType==null){return;}
         this.voteType = voteType;
     }
 
     public void setVotes(List<Vote> votes) {
+        if(votes==null){return;}
         this.votes = votes;
     }
 }

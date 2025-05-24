@@ -62,4 +62,11 @@ public Tag createTag(@RequestBody Tag tag) {
     public List<TagDTO> getTags(){
         return tagService.getAllTags();
     }
+
+    @GetMapping("/getTagNameById/{id}")
+    @ResponseBody
+    public String getTagNameById(@PathVariable Integer id) {
+        String tagName = tagService.getTagNameById(id);
+        return tagName;
+    }
 }

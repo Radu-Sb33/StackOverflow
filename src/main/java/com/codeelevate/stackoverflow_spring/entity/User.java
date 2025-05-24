@@ -15,6 +15,7 @@ import java.util.List;
         property = "id",
         scope = User.class)
 //@JsonIgnoreProperties({"email", "password", "about", "reputation", "img", "posts", "comments", "tags", "votes", "banned", "moderator"})
+@JsonIgnoreProperties(value = {"votes", "posts", "comments", "tags"})
 public class User {
 
    // @Getter
@@ -86,6 +87,7 @@ public class User {
 //    @Setter
 //    @Getter
     @OneToMany(mappedBy = "votedByUser")
+    @JsonIgnore
     private List<Vote> votes;
 
     public User() {
