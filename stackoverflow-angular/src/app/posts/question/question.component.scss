@@ -103,3 +103,176 @@
     padding: 10px;
   }
 }
+
+.tag {
+  padding: 6px 14px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 700;
+  display: inline-block;
+  max-width: 100%;
+  min-width: 0;
+  text-align: center;
+  font-size: 15px;
+  margin: 4px 6px 8px 0;
+  user-select: none;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  align-self: flex-start;
+
+  transition:
+    filter 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  /* opțional, un mic shadow normal */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.tag:hover {
+  filter: brightness(75%); /* închide culoarea cu 25% */
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.vote-buttons {
+  display: flex;
+  align-items: center;
+
+  .vote-up-button, .vote-down-button {
+    transition: transform 0.2s ease, color 0.2s ease;
+    font-size: 1.4rem;
+
+    &:active {
+      transform: translateY(-4px) scale(1.15);
+    }
+  }
+
+  .vote-up-button:hover {
+    color: #28a745; // Verde
+    transform: scale(1.6);
+  }
+
+  .vote-down-button:hover {
+    color: #dc3545; // Roșu
+    transform: scale(1.6);
+  }
+
+  .vote-count {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0 8px;
+    color: #555;
+    transition: transform 0.2s ease, color 0.2s ease;
+
+    &.voted {
+      animation: popCount 0.3s ease;
+    }
+  }
+}
+
+@keyframes popCount {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); color: #007bff; }
+  100% { transform: scale(1); }
+}
+
+.question-title-row { /* This is the new class for the wrapper div */
+  display: flex;             /* Use Flexbox */
+  justify-content: space-between; /* Pushes items to opposite ends */
+  align-items: center;       /* Vertically centers items */
+  margin-bottom: 15px;       /* Add some space below the header line */
+}
+
+.question-title-row h3 { /* Target the h3 inside this new wrapper */
+  margin: 0;                 /* Remove default margin from h3 */
+  flex-grow: 1;              /* Allows the title to take available space */
+  padding-right: 10px;       /* Add a little space between title and button */
+}
+
+.edit-question-button-right { /* This is the div containing the button */
+  flex-shrink: 0;            /* Prevents the button from shrinking */
+}
+
+/* You might already have styles for .edit-question-button-right button,
+   if not, you can add them for specific styling: */
+.edit-question-button-right button {
+  background-color: #6c757d; /* A subtle grey for edit */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9em;
+}
+
+.edit-question-button-right button:hover {
+  background-color: #5a6268;
+}
+
+.question-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.question-title-row h3 {
+  margin: 0;
+  flex-grow: 1;
+  padding-right: 10px;
+}
+
+.edit-question-button-right {
+  flex-shrink: 0;
+}
+
+.edit-question-button-right button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9em;
+}
+
+.edit-question-button-right button:hover {
+  background-color: #5a6268;
+}
+
+/* NEW STYLES FOR ANSWER CONTENT AND EDIT BUTTON */
+.answer-content-row {
+  display: flex;
+  justify-content: space-between; /* Pushes answer content and edit button apart */
+  align-items: flex-start; /* Aligns content to top if text wraps */
+  margin-bottom: 10px; /* Space between content and other info */
+}
+
+.answer-content-row p {
+  margin: 0; /* Remove default paragraph margin within this row */
+  flex-grow: 1; /* Allow paragraph to take available space */
+  padding-right: 10px; /* Space between text and button */
+}
+
+.edit-answer-button-right {
+  flex-shrink: 0; /* Prevents button from shrinking */
+  margin-left: auto; /* Pushes it to the right */
+}
+
+.edit-answer-button-right button {
+  background-color: #8c8c8c; /* A slightly darker grey for answer edit */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.8em; /* Slightly smaller button for answers */
+  white-space: nowrap; /* Keep button text on one line */
+}
+
+.edit-answer-button-right button:hover {
+  background-color: #7a7a7a;
+}

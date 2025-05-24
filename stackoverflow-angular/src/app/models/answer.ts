@@ -5,7 +5,7 @@ import {Question} from "./question";
 export interface Answer {
   id: number;
   //votes: Vote[];
-  createdByUser: User;
+  createdByUser?: User;
   parentQuestion: Question;
   postType: PostType;
   postContent: string;
@@ -13,4 +13,5 @@ export interface Answer {
   img?: string;
   //comments: Comment[];
   //postTags: PostTag[];
+  createdByUsername?: string;
 }

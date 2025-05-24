@@ -33,10 +33,18 @@ export class UserService {
     localStorage.removeItem('userId');
     // 2. Actualizează starea de autentificare
     this.isAuthenticated = false;
-
-
-
+    this.clearSession();
     this.router.navigate(['/login']);
+  }
+
+  public clearSession(): void {
+    // console.log('Clearing session data from localStorage for refresh.'); // Opțional, pentru debugging
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('emailLogged');
+    localStorage.removeItem('idParinte');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
+    this.isAuthenticated = false;
   }
 
   public getUsers(): Observable<User[]>{
@@ -47,8 +55,11 @@ export class UserService {
     return this.http.get<User>(`${this.baseUrl}/get/byEmail/${email}`)
   }
 
-  public getUserIDbyEmail(email: string): Observable<number>{
-    return this.http.get<number>(`${this.baseUrl}/getUserIdByEmail`);
+  public getUserIDbyEmail(email: string): Observable<{ userId: number }> {
+    return this.http.get<{ userId: number }>(
+      `${this.baseUrl}/getUserIdByEmail`,
+      { params: { email } }          // <= aici se atașează ?email=...
+    );
   }
 
   public register(user: Partial<User>): Observable<User> {
@@ -101,10 +112,19 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/unban-user/${userId}`, {});
   }
 
+  public getCurrentUser(): Observable<User | null> {
+    const email = localStorage.getItem('emailLogged');
+    if (!email) {
+      return of(null); // dacă nu e email, întoarce null ca observable
+    }
+    return this.getUserByEmail(email);
+  }
 
-
-
-
-
+  public getUsernameById(userId: number): Observable<string> {
+    return this.http.get<{username: string}>(`${this.baseUrl}/getUsernameById/${userId}`)
+      .pipe(
+        map(response => response.username)
+      );
+  }
 
 }

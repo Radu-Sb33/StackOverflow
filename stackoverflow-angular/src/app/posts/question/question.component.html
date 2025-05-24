@@ -3,22 +3,99 @@
     <button pButton pRipple label="Add Question" icon="pi pi-plus" (click)="navigateToAddQuestion()"></button>
   </div>
   <div *ngFor="let question of questions" class="question-card">
-    <h3>{{ question.postTitleQ }}</h3>
+
+    <div class="question-title-row">
+      <h3>{{ question.postTitleQ }}</h3>
+      <div *ngIf="isAuthenticated && currentUserId === question.createdByUser" class="edit-question-button-right">
+        <button
+          pButton
+          pRipple
+          label="Edit Question"
+          icon="pi pi-pencil"
+          class="p-button-secondary"
+          (click)="navigateToEditQuestion(question.id)"
+        ></button>
+      </div>
+    </div>
+
+    <div class="vote-buttons">
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-regular fa-thumbs-up"
+        class="p-button-rounded p-button-text vote-up-button"
+        (click)="castVoteThumbsUp(question.id)" [disabled]="isVoting"
+      ></button>
+
+      <span class="vote-count">{{ question.voteScore || 0 }}</span>
+
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-regular fa-thumbs-down"
+        class="p-button-rounded p-button-text vote-down-button"
+        (click)="castVoteThumbsDown(question.id)" [disabled]="isVoting"
+      ></button>
+    </div>
+    <span
+      class="tag"
+      *ngFor="let tag of tagMap[question.id]"
+      [ngStyle]="{ 'background-color': tag.color }"
+    >
+      {{ tag.tagName }}
+    </span>
     <p>{{ question.postContent }}</p>
 
-    <p id="asked" class="bck">  <strong>Asked by:</strong> {{ question.createdByUser.username }}</p>
-    <p id="asked" class="bck"><strong>Posted on:</strong> {{ question.postedDate | date }}</p>
+    <p id="asked" class="bck">
+      <strong>Asked by:</strong>
+      <span *ngIf="question.createdByUsername; else unknownUser">
+        {{ question.createdByUsername }}
+      </span>
+      <ng-template #unknownUser>Unknown</ng-template>
+    </p>
+
+    <p id="posted-on" class="bck">
+      <strong>Posted on:</strong>
+      {{ question.postedDate ? (question.postedDate | date) : 'Unknown' }}
+    </p>
+
     <div *ngIf="isAuthenticated" class="add-answer-button">
       <button pButton pRipple label="Add Answer" icon="pi pi-plus" (click)="navigateToAddAnswer(question.id)"></button>
     </div>
+
+
     <div *ngIf="question.answers">
       <h4>Answers:</h4>
       <div *ngFor="let answer of question.answers" class="answer-card">
-        <p>{{ answer.postContent }}</p>
-        <p><strong>Answered by:</strong> {{ answer.createdByUser.username }}</p>
-        <p><strong>Posted on:</strong> {{ answer.postedDate | date }}</p>
+
+        <div class="answer-content-row">
+          <p>{{ answer.postContent }}</p>
+          <div *ngIf="isAuthenticated && currentUserId === answer.createdByUser.id" class="edit-answer-button-right">
+            <button
+              pButton
+              pRipple
+              label="Edit Answer"
+              icon="pi pi-pencil"
+              class="p-button-secondary"
+              (click)="navigateToEditAnswer(answer.id)"
+            ></button>
+          </div>
+        </div>
+        <p id="asked-answer" class="bck">
+          <strong>Answered by:</strong>
+          <span *ngIf="answer.createdByUsername; else unknownUser">
+            {{ answer.createdByUsername }}
+          </span>
+          <ng-template #unknownUser>Unknown</ng-template>
+        </p>
+
+        <p id="posted-on-answer" class="bck">
+          <strong>Posted on:</strong>
+          {{ answer.postedDate ? (answer.postedDate | date) : 'Unknown' }}
+        </p>
       </div>
     </div>
   </div>
 </div>
-

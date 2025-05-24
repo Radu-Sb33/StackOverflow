@@ -1,5 +1,7 @@
 package com.codeelevate.stackoverflow_spring.service;
 
+import com.codeelevate.stackoverflow_spring.dto.TagDTO;
+import com.codeelevate.stackoverflow_spring.entity.Post;
 import com.codeelevate.stackoverflow_spring.entity.Tag;
 import com.codeelevate.stackoverflow_spring.entity.User;
 import com.codeelevate.stackoverflow_spring.repository.ITagRepository;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class TagService {
@@ -15,7 +19,6 @@ public class TagService {
     ITagRepository tagRepository;
     @Autowired
     IUserRepository userRepository;
-
     public Tag createTag(Tag tag) {
 
         Integer userId=tag.getCreatedByUser().getId();
@@ -31,6 +34,23 @@ public class TagService {
         return tagRepository.save(tag);
     }
 
+    public List<TagDTO> getAllTags() {
+        List<Tag> tags = (List<Tag>) tagRepository.findAll();
+        tags.sort(Comparator.comparing(Tag::getTagName));
 
+        // Mapăm fiecare Tag -> TagDTO
+        return tags.stream()
+                .map(tag -> new TagDTO(
+                        tag.getId(),
+                        tag.getTagName(),
+                        tag.getTagDescription(),
+                        tag.getCreatedByUser().getUsername()
+                ))
+                .toList();
+    }
+
+    public String getTagNameById(Integer id) {
+        return tagRepository.findTagNameById(id);
+    }
 
 }

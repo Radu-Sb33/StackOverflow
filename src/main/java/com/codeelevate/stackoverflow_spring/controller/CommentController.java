@@ -29,10 +29,10 @@ public class CommentController {
         commentService.deleteComment(id);
     }
 
-    @GetMapping("/getAllComments")
+    @GetMapping("/getAllComments/{postId}")
     @ResponseBody
-    public List<Comment> getAllComments() {
-        return commentService.getAllComments();
+    public List<Comment> getAllCommentsByPost(Integer postId) {
+        return commentService.getAllCommentsByPost(postId);
     }
 
     @PutMapping("/updateComment/{idComm}")

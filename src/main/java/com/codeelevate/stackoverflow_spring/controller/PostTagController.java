@@ -6,12 +6,12 @@ import com.codeelevate.stackoverflow_spring.service.PostTagService;
 import com.codeelevate.stackoverflow_spring.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/postTag")
 public class PostTagController {
     @Autowired
@@ -22,4 +22,18 @@ public class PostTagController {
     public PostTag createTag(@RequestBody PostTag postTag) {
         return postTagService.createPostTag(postTag);
     }
+
+    @GetMapping("/getAllPostTags")
+    @ResponseBody
+    public List<PostTag> getAllPostTags() {
+        return postTagService.getAllPostTags();
+    }
+
+    @GetMapping("/getByPost/{postId}")
+    @ResponseBody
+    public List<PostTag> getPostTagsByPostId(@PathVariable Integer postId) {
+        return postTagService.getPostTagsByPostId(postId);
+    }
+
+
 }

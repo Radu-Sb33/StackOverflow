@@ -41,6 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Configurare Ripple
+    this.userService.clearSession();
     if (this.primengConfigService.ripple && typeof this.primengConfigService.ripple.set === 'function') {
       this.primengConfigService.ripple.set(true);
     } else {
@@ -69,6 +70,7 @@ export class AppComponent implements OnInit, OnDestroy {
       { label: 'Questions', icon: 'fa-solid fa-question', routerLink: ['/questions'] },
       { label: 'Answers', icon: 'fa-solid fa-wand-magic-sparkles', routerLink: ['/answers']},
       { label: 'Users', icon: 'bi bi-people', routerLink: ['/users']},
+      { label: 'Tags', icon: 'fa-solid fa-tags', routerLink: ['/tags']},
       ...(this.userService.isAuthenticated ? [ // Folosim booleanul direct
         {
           label: 'Logout',

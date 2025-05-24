@@ -136,9 +136,16 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "User unbanned successfully"));
     }
 
-
-
-
-
+    @GetMapping("/getUsernameById/{id}")
+    @ResponseBody
+    public ResponseEntity<?> getUsernameById(@PathVariable Integer id) {
+        Optional<String> usernameOpt = userService.findUsernameById(id);
+        if (usernameOpt.isPresent()) {
+            return ResponseEntity.ok(Map.of("username", usernameOpt.get()));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+    }
 
 }

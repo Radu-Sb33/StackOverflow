@@ -1,22 +1,148 @@
 <div class="add-question-container">
-  <h2>Add a New Question</h2>
-  <form [formGroup]="addQuestionForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="title">Title</label>
-      <input id="title" type="text" pInputText formControlName="title" placeholder="Enter question title" />
-      <small *ngIf="addQuestionForm.get('title')?.invalid && addQuestionForm.get('title')?.touched" class="p-error">
-        Title is required and must be at least 5 characters.
-      </small>
-    </div>
+  <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
 
-    <div>
-      <label for="content">Content</label>
-      <textarea id="content" pInputTextarea formControlName="content" placeholder="Enter question content"></textarea>
-      <small *ngIf="addQuestionForm.get('content')?.invalid && addQuestionForm.get('content')?.touched" class="p-error">
-        Content is required and must be at least 10 characters.
-      </small>
-    </div>
+  <h2>Adaugă o Întrebare Nouă</h2>
 
-    <button pButton pRipple label="Submit" type="submit" [disabled]="addQuestionForm.invalid"></button>
+  <form [formGroup]="addQuestionForm" (ngSubmit)="onSubmit()" class="add-question-form">
+    <div class="p-fluid">
+      <div class="field">
+        <p-floatLabel>
+          <input pInputText id="title" formControlName="title" />
+          <label for="title">Titlu Întrebare</label>
+        </p-floatLabel>
+        <div
+          *ngIf="
+            addQuestionForm.get('title')?.invalid &&
+            (addQuestionForm.get('title')?.dirty || addQuestionForm.get('title')?.touched)
+          "
+          class="p-error"
+        >
+          <small *ngIf="addQuestionForm.get('title')?.errors?.['required']">
+            Titlul este obligatoriu.
+          </small>
+          <small *ngIf="addQuestionForm.get('title')?.errors?.['minlength']">
+            Titlul trebuie să aibă minim 5 caractere.
+          </small>
+        </div>
+      </div>
+
+      <div class="field">
+        <p-floatLabel>
+          <textarea
+            pInputTextarea
+            id="content"
+            formControlName="content"
+            rows="5"
+            cols="30"
+          ></textarea>
+          <label for="content">Conținut Întrebare</label>
+        </p-floatLabel>
+        <div
+          *ngIf="
+            addQuestionForm.get('content')?.invalid &&
+            (addQuestionForm.get('content')?.dirty || addQuestionForm.get('content')?.touched)
+          "
+          class="p-error"
+        >
+          <small *ngIf="addQuestionForm.get('content')?.errors?.['required']">
+            Conținutul este obligatoriu.
+          </small>
+          <small *ngIf="addQuestionForm.get('content')?.errors?.['minlength']">
+            Conținutul trebuie să aibă minim 10 caractere.
+          </small>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="tagInput">Adaugă Tag-uri</label>
+        <p-autoComplete
+          id="tagInput"
+          formControlName="tagInput"
+          [suggestions]="filteredTags"
+          (completeMethod)="filterTags($event)"
+          field="tagName"
+          [multiple]="false"
+          (onSelect)="onTagSelect($event)"
+          [forceSelection]="false"
+          placeholder="Caută sau introdu un tag nou"
+        >
+        </p-autoComplete>
+
+        <div *ngIf="showCreateTagPrompt" class="create-tag-prompt">
+          <p>
+            Tag-ul "<strong>{{ currentTagInputValueForDisplay }}</strong>" nu există.
+            Dorești să-l creezi?
+          </p>
+          <button pButton type="button" label="Creează Tag" (click)="prepareCreateTag()"></button>
+        </div>
+
+        <div *ngIf="showCreateTagInline" class="create-tag-inline mt-3">
+          <h4>Creează tag-ul: "{{ newTagFromAutoComplete }}"</h4>
+          <div class="p-fluid">
+            <div class="field">
+              <p-floatLabel>
+                <input
+                  pInputText
+                  id="newTagDescription"
+                  formControlName="newTagDescriptionCtrl"
+                />
+                <label for="newTagDescription">Descriere Tag</label>
+              </p-floatLabel>
+              <div
+                *ngIf="
+                  addQuestionForm.get('newTagDescriptionCtrl')?.invalid &&
+                  (addQuestionForm.get('newTagDescriptionCtrl')?.dirty ||
+                    addQuestionForm.get('newTagDescriptionCtrl')?.touched)
+                "
+                class="p-error"
+              >
+                <small
+                  *ngIf="addQuestionForm.get('newTagDescriptionCtrl')?.errors?.['required']"
+                >
+                  Descrierea este obligatorie.
+                </small>
+                <small
+                  *ngIf="addQuestionForm.get('newTagDescriptionCtrl')?.errors?.['minlength']"
+                >
+                  Descrierea trebuie să aibă minim 5 caractere.
+                </small>
+              </div>
+            </div>
+            <div class="p-d-flex p-jc-end">
+              <button
+                pButton
+                type="button"
+                label="Anulează"
+                icon="pi pi-times"
+                class="p-button-secondary p-mr-2"
+                (click)="cancelCreateTag()"
+                [disabled]="tagCreationLoading"
+              ></button>
+              <button
+                pButton
+                type="button"
+                label="Confirmă Creare"
+                icon="pi pi-check"
+                (click)="confirmCreateTag()"
+                [disabled]="tagCreationLoading"
+                [loading]="tagCreationLoading"
+              ></button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="selectedTagsForForm.length > 0" class="selected-tags-chips mt-3">
+          <p-chip *ngFor="let tag of selectedTagsForForm" [label]="tag.tagName" removable="true" (onRemove)="removeTag(tag)"></p-chip>
+        </div>
+      </div>
+
+      <button
+        pButton
+        type="submit"
+        label="Adaugă Întrebare"
+        class="p-mt-4"
+        [disabled]="addQuestionForm.invalid || tagCreationLoading"
+      ></button>
+    </div>
   </form>
 </div>

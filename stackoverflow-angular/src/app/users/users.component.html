@@ -1,3 +1,4 @@
+
 <p-table [value]="users" sortField="username" sortMode="single" dataKey="username" rowGroupMode="subheader" groupRowsBy="username" [tableStyle]="{'min-width': '70rem'}">
   <ng-template #header>
     <tr>
@@ -93,6 +94,20 @@
                 *ngIf="user.is_banned"
                 (click)="unbanUser(user.id)">
                 <i class="fa-solid fa-user-check"></i> Unban User
+              </button>
+
+              <button
+                class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-all shadow-md"
+                *ngIf="!user.is_moderator && !user.is_banned"
+                (click)="promoteUser(user.id)">
+                <i class="fa-solid fa-user-check"></i> Promote User
+              </button>
+
+              <button
+                class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-all shadow-md"
+                *ngIf="user.is_moderator"
+                (click)="demoteUser(user.id)">
+                <i class="fa-solid fa-user-check"></i> Demote User
               </button>
             </div>
 

@@ -1,17 +1,12 @@
 package com.codeelevate.stackoverflow_spring.entity;
 
-import com.codeelevate.stackoverflow_spring.service.UserService;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
+import serializer.PostIdListSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import serializer.PostTagSerializer;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +16,7 @@ import java.util.List;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id",
         scope = Post.class)
+@JsonIgnoreProperties(value = {"votes"})
 public class Post {
 
     //@Getter
@@ -30,7 +26,7 @@ public class Post {
 
 //    @Getter
 //    @Setter
-    //@JsonManagedReference
+    @JsonManagedReference
     @OneToMany(mappedBy="post")
     private List<Vote> votes;
 
@@ -44,11 +40,14 @@ public class Post {
 //    @Setter
     @ManyToOne
     @JoinColumn(name = "parent_question_id")
+    @JsonBackReference
     private Post parentQuestion;
 
 //    @Getter
 //    @Setter
     @OneToMany(mappedBy = "parentQuestion")
+    //@JsonSerialize(using = PostIdListSerializer.class)
+    @JsonManagedReference
     private List<Post> answers;
 
 //    @Getter
@@ -94,6 +93,7 @@ public class Post {
 
 //    @Getter
 //    @Setter
+    //@JsonSerialize(contentUsing = PostTagSerializer.class)
     @OneToMany(mappedBy ="post")
     private List<PostTag> postTags;
 

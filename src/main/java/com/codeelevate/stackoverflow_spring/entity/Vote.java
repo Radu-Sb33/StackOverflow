@@ -2,6 +2,7 @@ package com.codeelevate.stackoverflow_spring.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
@@ -25,7 +26,8 @@ public class Vote {
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
-    //@JsonBackReference
+    @JsonBackReference
+    @JsonIgnoreProperties({"votes", "comments", "tags"})
     private Post post;
 
 
@@ -65,14 +67,17 @@ public class Vote {
     }
 
     public void setVoteType(VoteType voteType) {
+        if(voteType==null){return;}
         this.voteType = voteType;
     }
 
     public void setPost(Post post) {
+        if(post==null){return;}
         this.post = post;
     }
 
     public void setVotedByUser(User votedByUser) {
+        if(votedByUser==null){return;}
         this.votedByUser = votedByUser;
     }
 }

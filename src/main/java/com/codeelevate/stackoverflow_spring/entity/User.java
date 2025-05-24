@@ -1,8 +1,8 @@
 package com.codeelevate.stackoverflow_spring.entity;
+import serializer.PostIdListSerializer;
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import java.util.List;
         property = "id",
         scope = User.class)
 //@JsonIgnoreProperties({"email", "password", "about", "reputation", "img", "posts", "comments", "tags", "votes", "banned", "moderator"})
+@JsonIgnoreProperties(value = {"votes", "posts", "comments", "tags"})
 public class User {
 
    // @Getter
@@ -69,7 +70,8 @@ public class User {
 
 //    @Setter
 //    @Getter
-    @OneToMany(mappedBy = "createdByUser")
+    @OneToMany(mappedBy = "createdByUser", fetch = FetchType.LAZY)
+    @JsonSerialize(using = PostIdListSerializer.class)
     private List<Post> posts=new ArrayList<>();
 
 //    @Setter
@@ -79,12 +81,13 @@ public class User {
 
 //    @Setter
 //    @Getter
-    @OneToMany(mappedBy = "createdByUser")
+    @OneToMany(mappedBy = "createdByUser", fetch = FetchType.LAZY)
     private List<Tag> tags;
 
 //    @Setter
 //    @Getter
     @OneToMany(mappedBy = "votedByUser")
+    @JsonIgnore
     private List<Vote> votes;
 
     public User() {

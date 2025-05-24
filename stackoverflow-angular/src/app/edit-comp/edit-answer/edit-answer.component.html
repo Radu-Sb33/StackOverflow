@@ -1,0 +1,45 @@
+<div class="edit-answer-container">
+  <h2>Edit Answer</h2>
+
+  <div *ngIf="loading" class="message loading">Saving...</div>
+  <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
+
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="postContent">Content:</label>
+      <textarea
+        id="postContent"
+        formControlName="postContent"
+        rows="8"
+        class="form-control"
+        [class.is-invalid]="editForm.get('postContent')?.invalid && editForm.get('postContent')?.touched"
+      ></textarea>
+      <div *ngIf="editForm.get('postContent')?.invalid && editForm.get('postContent')?.touched" class="invalid-feedback">
+        Content is invalid.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="img">Image URL (Optional):</label>
+      <input
+        id="img"
+        type="text"
+        formControlName="img"
+        class="form-control"
+        [class.is-invalid]="editForm.get('img')?.invalid && editForm.get('img')?.touched"
+      />
+      <div *ngIf="editForm.get('img')?.invalid && editForm.get('img')?.touched" class="invalid-feedback">
+        Image URL is invalid.
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="loading" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Save Changes
+      </button>
+      <button type="button" (click)="cancel()" class="btn btn-secondary">Cancel</button>
+    </div>
+  </form>
+</div>

@@ -79,5 +79,12 @@ export class UsersComponent implements OnInit{
     });
   }
 
+  public promoteUser(userId: number): void{
+
+  }
+  public demoteUser(userId: number): void{
+
+  }
+
 
 }

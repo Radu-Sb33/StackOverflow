@@ -67,6 +67,25 @@ export class LoginComponent {
         localStorage.setItem('emailLogged', email);
         localStorage.setItem('authToken', response);
 
+        this.userService.getUserIDbyEmail(email).subscribe(
+          (response: { userId: number }) => {
+            // 'response' here will be the object: { userId: number }
+            const userId = response.userId;
+
+            if (userId !== undefined && userId !== null) { // Basic null/undefined check
+              localStorage.setItem('userId', userId.toString());
+              console.log('User ID saved to localStorage:', userId);
+            } else {
+              console.error('User ID received was undefined or null.');
+            }
+          },
+          (error) => {
+            // Handle any errors that occur during the HTTP request
+            console.error('Error fetching user ID:', error);
+            // You might want to display an error message to the user here
+          }
+        );
+
         // Redirect to the desired route after successful login
         this.router.navigate(['/home']);
       },

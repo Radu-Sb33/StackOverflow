@@ -55,8 +55,8 @@ public class CommentService {
         commentRepository.delete(c);
     }
 
-    public List<Comment> getAllComments(){
-        return (List<Comment>) commentRepository.findAll();
+    public List<Comment> getAllCommentsByPost(Integer postId){
+        return commentRepository.getCommentsByPostId(postId);
     }
 
     public Comment updateComment(Integer id, Comment commDetails) {
